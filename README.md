@@ -1,2 +1,2 @@
 # Doktorski-repo
-Svi kodovi koji su nam bitni za model koji je razvijen u doktoratu
+Svi kodovi koji su nam bitni za model razvijen u doktoratu
