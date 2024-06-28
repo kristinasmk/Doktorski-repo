@@ -162,7 +162,9 @@ for ac=1:numel(ACid)
     
 end
 
-
+save ('flight_hist.mat', 'flight_hist');
+save ('flight_pos.mat', 'flight_pos');
+save ('flight.mat', 'flight');
 
 
 

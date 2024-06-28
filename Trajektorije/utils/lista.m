@@ -12,7 +12,11 @@ function List = lista (ulaz, znakovi)
 lists=cell(numel(ulaz),1);
 list2=cellfun('isempty',lists);
 lists(list2)={znakovi};
-List=[char(lists),char(ulaz)];
+
+charUlaz = cellfun(@num2str, ulaz, 'UniformOutput', false);
+charLists = cellfun(@char, lists, 'UniformOutput', false);
+
+List= strcat(charLists, charUlaz);
 List=cellstr(List);
 
 end

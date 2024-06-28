@@ -1,8 +1,8 @@
 function [AC,ACintent] = allftread2 (raw_allft, desired_time, endtime)
 
-raw_allft = '20210901Initial.ALL_FT+';
-desired_time = 8*3600;
-endtime = 10*3600;
+% raw_allft = '20210901Initial.ALL_FT+';
+% desired_time = 8*3600;
+% endtime = 10*3600;
 
 %this function will read raw *.ALL_FT+ file obtained from NEST and filter
 %desired data.
