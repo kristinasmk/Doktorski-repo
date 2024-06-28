@@ -25,7 +25,7 @@ function TOT_time_sec = TOT_uncertainty(time_to_EOBT, departure_planned_time)
     % Find the correct interval
     interval_index = 0;
     for i = 1:size(intervals, 1)
-        if time_to_EOBT > intervals(i, 1) && time_to_eobt <= intervals(i, 2)
+        if time_to_EOBT > intervals(i, 1) && time_to_EOBT <= intervals(i, 2)
             interval_index = i;
             break;
         end
