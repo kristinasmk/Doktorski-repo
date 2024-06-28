@@ -49,7 +49,7 @@ load ('flight_hist.mat', 'flight_hist');
 load ('flight_pos.mat', 'flight_pos');
 load ('flight.mat', 'flight');
 
-
+flight_pos = EOBTinput (FPLintent, flight_pos);
 
 TrafficArchive(length(flight_pos))=struct();
 for a=262%:length(flight_pos)
