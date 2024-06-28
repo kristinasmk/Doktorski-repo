@@ -42,12 +42,12 @@ endtime=desired_time+2*3600;
 
 %data importer (so6reader function) - import ac data from so6 history from NEST 
 
-% [flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
+[flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
  %load flightdata07072.mat
 
-load ('flight_hist.mat', 'flight_hist');
-load ('flight_pos.mat', 'flight_pos');
-load ('flight.mat', 'flight');
+% load ('flight_hist.mat', 'flight_hist');
+% load ('flight_pos.mat', 'flight_pos');
+% load ('flight.mat', 'flight');
 
 TrafficArchive(length(flight_pos))=struct();
 for a=262%:length(flight_pos)

@@ -39,9 +39,9 @@ so6data=[so6data,etime_sec,dtime_sec]; %adding row with time in seconds to so6 d
 
 %since some callsings are repetative flights new unique ID has to be created to 
 ACid1=cellstr([char(so6data(:,2)),char(so6data(:,3)),char(so6data(:,10))]); 
-ACid2=lista(so6data(:,17),'A');
-ACid = cellfun(@(x, y) [x, y], ACid1, ACid2, 'un', 0);
-
+% ACid2=lista(so6data(:,17),'A');
+% ACid = cellfun(@(x, y) [x, y], ACid1, ACid2, 'un', 0);
+ACid = ACid1;
 
 % should be differentiate by AC ID given from eurocontrol
 so6data=[so6data,ACid];
@@ -165,34 +165,4 @@ end
 save ('flight_hist.mat', 'flight_hist');
 save ('flight_pos.mat', 'flight_pos');
 save ('flight.mat', 'flight');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
