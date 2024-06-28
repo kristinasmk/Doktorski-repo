@@ -1,7 +1,8 @@
-function [AC,ACintent] = allftread2 (raw_allft, desired_time)
-%
-% raw_allft = '20210901Initial.ALL_FT+';
-% desired_time = 8*3600;
+function [AC,ACintent] = allftread2 (raw_allft, desired_time, endtime)
+
+raw_allft = '20210901Initial.ALL_FT+';
+desired_time = 8*3600;
+endtime = 10*3600;
 
 %this function will read raw *.ALL_FT+ file obtained from NEST and filter
 %desired data.
@@ -72,17 +73,18 @@ AC(s).froute=cellstr(froute);
 AC(s).eobt = eobt(s);
 
 %loging desired data from desired point in time "desired_time"
-        if desired_time<=t(size(t,1),1)  %determing if route is within desired time
+        if desired_time<=t(size(t,1),1) && endtime >= t(1,1)  %determing if route is within desired time
             p=sum(~(desired_time<=t(:,1)))+1; %determing point od desired time in route
             %+1 is addes to rule out route point before desired_time
             ACintent(n).ACid=ACid(s); 
             ACintent(n).callsing=allftdata(s,3);
             ACintent(n).depart=allftdata(s,1);
-            ACintent(n).route=cellstr(newStr(p:end,:));
-            ACintent(n).ts=t(p:end,:);
-            ACintent(n).coords=cellstr(coords(p:end,:));
-            raw_route=newStr(p:end,:);
-            froute=rfilter(raw_route);
+            ACintent(n).route=cellstr(newStr);
+            ACintent(n).ts=t(:,1);
+            ACintent(n).coords=cellstr(coords);
+%             raw_route=newStr(p:end,:);
+%             raw_route=newStr(s);
+%             froute=rfilter(raw_route);
             fcoords=char(froute(:,7));
             fcoords=coord_conv(fcoords);
             ACintent(n).froute=[cellstr(froute),cellstr(fcoords)];
@@ -105,7 +107,8 @@ AC(s).eobt = eobt(s);
      end
 end
 
-
+% save('ACintent.mat', 'ACintent');
+% save('AC', 'AC'); 
 %---------------------
 %important notice
 %---------------------
@@ -116,21 +119,4 @@ end
 %---------------------
 
  end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%end
+ 

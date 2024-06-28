@@ -30,24 +30,27 @@ AstarGrid.lon2=23;
 AstarGrid.lat2=58;
 
 FlownArea=[39 6 58 23];
-raw_so6= 'Traffic1306.so6';
+raw_so6= 'Traffic0109.so6';
+raw_allft = '20210901Initial.ALL_FT+';
 desired_time=8*3600;
 endtime=desired_time+2*3600;
+
+[allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime);
 
 %filed flight plan should be copied since waypoints will change to mitigate
 %clouds
 
 %data importer (so6reader function) - import ac data from so6 history from NEST 
 
-%[flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
+[flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
  %load flightdata07072.mat
 
-load ('flight_hist.mat', 'flight_hist');
-load ('flight_pos.mat', 'flight_pos');
-load ('flight.mat', 'flight');
+% load ('flight_hist.mat', 'flight_hist');
+% load ('flight_pos.mat', 'flight_pos');
+% load ('flight.mat', 'flight');
 
 TrafficArchive(length(flight_pos))=struct();
-for a=84%[80,82,84, 86, 88,89, 90, 92, 94, 96 ] %:length(flight_pos)
+for a=262%:length(flight_pos)
 %% generate each flight
 ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins);
 ACstateAll = cell (NumofNowcastMembers, NumOfSafetyMargins);
