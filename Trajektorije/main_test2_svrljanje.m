@@ -149,12 +149,16 @@ TrafficArchive(a).tDif = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT)
 
 %% simulating traffic
 
-    % Get the Clouddata for the current nowcast member
+% Get the Clouddata for the current nowcast member
     CurrentCloudData = Clouddata(:, :, nowcastMember, safetyMarginIndex);
+%adaptation of spawn time to consider different EOBT
+entrytime = flight_pos(a).spawntime;
+if entrytime >= desired_time
+    entrytime = entrytime + flight_poas(a).
        
 [ACarchive, ACstate, ACcontrol,WPTi,ACmode] = trajectorygen_Weather_v5_svrljanje (ACstate, ACcontrol, Wind,...
  ACmode, dT, SimulationTime, WPTi, FFP, flight_pos(a).waypoints, opsdata, apfdata,...
- GP, const,ACarchive,AstarGrid,CurrentCloudData,NeighboorsTable, flight_pos(a).spawntime,endtime,APlist);
+ GP, const,ACarchive,AstarGrid,CurrentCloudData,NeighboorsTable, entrytime,endtime,APlist);
 
 ACarchive=ACarchive(~(ACarchive(:,1)==0),:);
 
