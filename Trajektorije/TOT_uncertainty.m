@@ -1,8 +1,8 @@
 function TOT_time_sec = TOT_uncertainty(time_to_EOBT, departure_planned_time)
     % Define the intervals (in minutes)
     
-    time_to_EOBT = 30; %in minutes
-    departure_planned_time = 30000;
+%     time_to_EOBT = 30; %in minutes
+%     departure_planned_time = 30000;
     intervals = [0, 15; 15, 30; 30, 60; 60, 90; 90, 120; 120, 180; 180, 240; 240, 360];
 
     % Define the departure times for each interval (in minutes)
@@ -36,5 +36,5 @@ function TOT_time_sec = TOT_uncertainty(time_to_EOBT, departure_planned_time)
     end
     
     selected_dep_times = TOT_increments{interval_index};
-    TOT_times_sec = departure_planned_time + selected_dep_times;
+    TOT_time_sec = departure_planned_time + selected_dep_times;
 end
