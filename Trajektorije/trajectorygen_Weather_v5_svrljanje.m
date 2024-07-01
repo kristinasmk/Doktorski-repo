@@ -45,14 +45,6 @@ function [ACarchive, ACstate, ACcontrol,WPTi,ACmode] = trajectorygen_Weather_v5_
 % V4 version - CloudMaps in 3D!
 %-----------------
 
-
-
-% calculation of possbile TOT
-time_to_EOBT = flight_pos(a).eobt - desired_time;
-%TOT_times_sec = TOT_uncertainty(time_to_EOBT, departure_planned_time)
-
-
-
 %if ac is right before landing function will be killed
 if max([waypoints.z])<160
     ACarchive=zeros(1,21);
