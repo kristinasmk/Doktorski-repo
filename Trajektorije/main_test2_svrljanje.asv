@@ -193,10 +193,10 @@ TimedifAll{nowcastMember,safetyMarginIndex,totIndex} = [ACsimtime ACso6time ACsi
 TrafficArchive(a).name = flight_pos(a).name;
 TrafficArchive(a).data{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll{nowcastMember,safetyMarginIndex,totIndex};
 TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{nowcastMember,safetyMarginIndex,totIndex};
-   end
+        end
      
-   end
-   end
+     end
+    end
  end
  
 save ('TrafficArchive.mat', 'TrafficArchive');
