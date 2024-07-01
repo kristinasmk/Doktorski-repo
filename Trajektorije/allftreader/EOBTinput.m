@@ -1,3 +1,6 @@
+%%This function combines the data from so6 (slight_pos) and data from all
+%%ft from nest (FPLintent) to stick EOBT time to the flight_pos data
+
 function flight_pos = EOBTinput (FPLintent, flight_pos)
     if ~isfield(FPLintent, 'ACid') || ~isfield(FPLintent, 'eobt')
         error('FPLintent struct must contain fields ''ACid'' and ''eobt''.');
