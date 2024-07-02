@@ -1,3 +1,6 @@
+%To add path of the Github repository
+addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
+
 load 'C:\Matlab\USE\nowcast_no_safety\nowcast_without_margin.mat';
 %load 'D:\Novi kod\data\RDT\Clouddata0109.mat'; 
 tic
@@ -6,7 +9,6 @@ constants                              %imports constants struct
 GlobalParameters
 warning('off','MATLAB:polyshape:repairedBySimplify');
 
-%flight data import
 
 %weather data import
 Wind=[0,0,0];
@@ -20,6 +22,7 @@ Clouddata = polygons3d;
 NumofNowcastMembers = 15;
 NumOfSafetyMargins = 3;
 NumOfTOT = 10;
+
 %[Clouddata, NumofNowcastMembers, NumOfSafetyMargins] = nowcast_polygons_final2 (nowcast,SM);
 load NeighboorsTable2 NeighboorsTable
 load ACsynonyms.mat
@@ -54,7 +57,7 @@ flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
 
 TrafficArchive(length(flight_pos))=struct();
-for a=197%:length(flight_pos)
+for a=148%:length(flight_pos)
 %% generate each flight
 
 ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
