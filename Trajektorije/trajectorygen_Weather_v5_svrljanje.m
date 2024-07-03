@@ -1,7 +1,7 @@
 function [ACarchive, ACstate, ACcontrol,WPTi,ACmode] = trajectorygen_Weather_v5_svrljanje (ACstate,...
     ACcontrol, Wind, ACmode, dT, SimulationTime, WPTi,FFP, ...
     waypoints, opsdata, apfdata, GP, const, ACarchive,...
-    AstarGrid,Clouddata, NeighboorsTable,Loctime,endtime,APlist)
+    AstarGrid,Clouddata, NeighboorsTable,Loctime,endtime,APlist, desired_time)
 %function that generates aircraft trajectory
 %input parameters for simulations should be:
 %---- Aircraft states ----                  ACstate
@@ -45,7 +45,7 @@ function [ACarchive, ACstate, ACcontrol,WPTi,ACmode] = trajectorygen_Weather_v5_
 % V4 version - CloudMaps in 3D!
 %-----------------
 
-%if ac is right before landing function will be killed
+%if ac is right before landing function will be killed        
 if max([waypoints.z])<160
     ACarchive=zeros(1,21);
     return
@@ -59,6 +59,32 @@ Altlist=1:60;
 ACalt=ACstate(3);
 Altp=abs(ACalt*3.28084/1000-Altlist);
 [~,altFL]=min(Altp);
+
+ %Ova petlja stavlja NaN ako je Loctime NaN, tj. ako je zrakoplov u zraku u
+ %na poèetku simulacije 
+if isnan(Loctime)
+    ACarchive(timestep,1)=NaN; 
+    ACarchive(timestep,2)=NaN;
+    ACarchive(timestep,3)=NaN;
+    ACarchive(timestep,4)=NaN;
+    ACarchive(timestep,5)=NaN;
+    ACarchive(timestep,6)=NaN;
+    ACarchive(timestep,7)=NaN;
+    ACarchive(timestep,8)=NaN;
+    ACarchive(timestep,9)=NaN;
+    ACarchive(timestep,10)=NaN;
+    ACarchive(timestep,11)=NaN; 
+    ACarchive(timestep,12)=NaN;
+    ACarchive(timestep,13)=NaN;
+    ACarchive(timestep,14)=NaN;    
+    ACarchive(timestep,15)=NaN;
+    ACarchive(timestep,16)=NaN;
+    ACarchive(timestep,17)=NaN;
+    ACarchive(timestep,18)=NaN;
+    ACarchive(timestep,19)=NaN;
+    ACarchive(timestep,20)=NaN;
+    ACarchive(timestep,21)=NaN; 
+else  
 
 %check if AC is landing for CDA
 wpts=size(waypoints,2);
@@ -306,6 +332,9 @@ while ACmode.StillFlying
         opsdata.Cfcr, opsdata.engtype, ACmode.CL);
     
     % 9. Update ACstate
+    
+    % if Loctime is smaller than desired_time, lines won't be written
+    if (currenttime >= desired_time) && (currenttime <= endtime)
     % Archive current state
     ACarchive(timestep,1)=ACstate(1);  % za ACstate_archive bi trebalo unaprijed odrediti zeros matricu
     ACarchive(timestep,2)=ACstate(2);
@@ -331,7 +360,7 @@ while ACmode.StillFlying
     ACarchive(timestep,20)=waypoints(WPTi).z;
     ACarchive(timestep,21)=currenttime; 
     % ACarchive(21)=waypoints(WPTi).t;
-    
+    end
     % calculate next ACstate
     ACstate = ACStateUpdate(ACstate, ACcontrol, Wind,  opsdata.wingsurf,  AtmHp.rho,  FF, CL, const);
     
@@ -439,5 +468,6 @@ end
     
 end
 
- end
+end
+end
 

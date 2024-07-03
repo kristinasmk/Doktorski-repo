@@ -57,7 +57,7 @@ flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
 
 TrafficArchive(length(flight_pos))=struct();
-for a=475%:length(flight_pos)
+for a=198%:length(flight_pos)
 %% generate each flight
 
 ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
@@ -69,6 +69,17 @@ TimedifAll = cell(NumofNowcastMembers,NumOfSafetyMargins, NumOfTOT);
 
 TrafficArchive(a).data = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
 TrafficArchive(a).tDif = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
+
+%adaptation of spawn time to consider different EOBT
+entrytime = flight_pos(a).spawntime;
+
+if entrytime > desired_time
+    time_to_EOBT = flight_pos(a).eobt - desired_time; 
+    TOT_time_sec = TOT_uncertainty(time_to_EOBT/60, entrytime);
+end
+if entrytime <= desired_time
+    TOT_time_sec = [entrytime, nan(1,9)];
+end
 
     for safetyMarginIndex = 1:NumOfSafetyMargins
 % Iterate over each nowcast member
@@ -155,21 +166,10 @@ TrafficArchive(a).tDif = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT)
 
 % Get the Clouddata for the current nowcast member
     CurrentCloudData = Clouddata(:, :, nowcastMember, safetyMarginIndex);
-%adaptation of spawn time to consider different EOBT
-
-entrytime = flight_pos(a).spawntime;
-
-if entrytime > desired_time
-    time_to_EOBT = flight_pos(a).eobt - desired_time; 
-    TOT_time_sec = TOT_uncertainty(time_to_EOBT/60, entrytime);
-end
-if entrytime <= desired_time
-    TOT_time_sec = repmat(entrytime, 1, 10);
-end
        
 [ACarchive, ACstate, ACcontrol,WPTi,ACmode] = trajectorygen_Weather_v5_svrljanje (ACstate, ACcontrol, Wind,...
  ACmode, dT, SimulationTime, WPTi, FFP, flight_pos(a).waypoints, opsdata, apfdata,...
- GP, const,ACarchive,AstarGrid,CurrentCloudData,NeighboorsTable, TOT_time_sec(totIndex),endtime,APlist);
+ GP, const,ACarchive,AstarGrid,CurrentCloudData,NeighboorsTable, TOT_time_sec(totIndex),endtime,APlist, desired_time);
 
 ACarchive=ACarchive(~(ACarchive(:,1)==0),:);
 
