@@ -57,7 +57,7 @@ flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
 
 TrafficArchive(length(flight_pos))=struct();
-for a=57%:length(flight_pos)
+for a=32%:length(flight_pos)
 %% generate each flight
 
 ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
@@ -208,12 +208,12 @@ TimedifAll{nowcastMember,safetyMarginIndex,totIndex} = [ACsimtime ACso6time ACsi
 TrafficArchive(a).name = flight_pos(a).name;
 TrafficArchive(a).data{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll{nowcastMember,safetyMarginIndex,totIndex};
 TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{nowcastMember,safetyMarginIndex,totIndex};
+toc
    end
      
    end
    end
- end
- 
+end
 save ('TrafficArchive.mat', 'TrafficArchive');
 %save ('leadTimeInSeconds', 'leadTimeInSeconds');
 
