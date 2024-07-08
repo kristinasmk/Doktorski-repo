@@ -20,10 +20,10 @@ SM = [10, 12.5, 15];
 load polygons3d.mat;
 Clouddata = polygons3d;
 NumofNowcastMembers = 15;
-NumOfSafetyMargins = 3;
-NumOfTOT = 10;
+NumOfSafetyMargins = 1;
+NumOfTOT = 1;
 
-% [Clouddata, NumofNowcastMembers, NumOfSafetyMargins] = nowcast_polygons_final2 (nowcast,SM);
+%[Clouddata, NumofNowcastMembers, NumOfSafetyMargins] = nowcast_polygons_final2 (nowcast,SM);
 load NeighboorsTable2 NeighboorsTable
 load ACsynonyms.mat
 load AirportList.mat

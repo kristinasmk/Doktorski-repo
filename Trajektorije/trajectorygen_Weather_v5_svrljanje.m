@@ -110,6 +110,7 @@ if cpos==0
     cpos=1;
 end 
 
+%CloudAlt su svi oblaci po FL, u listi odvojeni s NaN
 [~, ~, CloudAlt,cloudMap3D] = cloudMerge_svrljanje (Clouddata{cpos,3},AstarGrid);
     
 while ACmode.StillFlying
