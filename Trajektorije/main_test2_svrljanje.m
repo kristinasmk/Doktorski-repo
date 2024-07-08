@@ -59,7 +59,6 @@ TOT_time_sec = zeros(1, 10);
 TrafficArchive(length(flight_pos))=struct();
 for a=32%:length(flight_pos)
 %% generate each flight
-
 ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
 ACstateAll = cell (NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
 ACcontrolAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
@@ -81,10 +80,16 @@ if entrytime <= desired_time
     TOT_time_sec = [entrytime, nan(1,9)];
 end
 
-    for safetyMarginIndex = 1:NumOfSafetyMargins
+    
 % Iterate over each nowcast member
     for nowcastMember = 1:NumofNowcastMembers
-        %iterate over each TOT value
+        
+        %provjera presijeca li planirana ruta bilo koji oblak
+        [~, intersected, intersected_points] = crossing_check(Clouddata, AstarGrid, flight_pos(a).waypoints, nowcastMember)  
+        
+ % Iterate over each safety margin   
+    for safetyMarginIndex = 1:NumOfSafetyMargins
+ %iterate over each TOT value
     for totIndex = 1:NumOfTOT
    % General simulation parameters:
     SimulationTime=2*3600; %duration of simulation, should be enough for all realistic scenarios.
