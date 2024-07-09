@@ -57,7 +57,7 @@ flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
 
 TrafficArchive(length(flight_pos))=struct();
-for a=32%:length(flight_pos)
+for a=323%:length(flight_pos)
 %% generate each flight
 ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
 ACstateAll = cell (NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
@@ -226,10 +226,9 @@ TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{
    %adapt TOT time for other members
 if intersected ==0
     for safetyMarginIndex = 2:NumOfSafetyMargins
-        for totIndex = 1:NumofTOT
+        for totIndex = 2:NumOfTOT
             %Ova funkcija mijenja vrijeme prema tome koliki je TOT prema
-            %razdiobi i ignorira one linije koje su prema novom vremenu
-            %prije vremena simulacije
+            %razdiobi
           [ACarchive] = TOT_decrement(ACarchive,time_to_EOBT/60, entrytime, totIndex);
           ACarchiveAll{nowcastMember, safetyMarginIndex,totIndex} = ACarchive;
           
