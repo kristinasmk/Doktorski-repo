@@ -74,7 +74,7 @@ entrytime = flight_pos(a).spawntime;
 
 if entrytime > desired_time
     time_to_EOBT = flight_pos(a).eobt - desired_time; 
-    TOT_time_sec = TOT_uncertainty(time_to_EOBT/60, entrytime);
+    [TOT_time_sec, TOT_increments] = TOT_uncertainty(time_to_EOBT/60, entrytime);
 end
 if entrytime <= desired_time
     TOT_time_sec = [entrytime, nan(1,9)];
@@ -227,16 +227,22 @@ TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{
 if intersected ==0
     for safetyMarginIndex = 2:NumOfSafetyMargins
         for totIndex = 1:NumofTOT
-            [ACarchive] = TOT_time_decrement(ACarchive,time_to_EOBT/60, entrytime);
-            
-          ACarchiveAll{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll{nowcastMember, 1, totIndex};
-          ACstateAll{nowcastMember, safetyMarginIndex, totIndex} = ACstateAll{nowcastMember, 1, totIndex};
-          ACcontrolAll{nowcastMember, safetyMarginIndex, totIndex} = ACcontrolAll{nowcastMember, 1, totIndex};
-          WPTiAll{nowcastMember, safetyMarginIndex, totIndex} = WPTiAll{nowcastMember, 1, totIndex};
-          ACmodeAll{nowcastMember, safetyMarginIndex, totIndex} = ACmodeAll{nowcastMember, 1, totIndex};
-          TimedifAll{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{nowcastMember, 1, totIndex};
-          TrafficArchive(a).data{nowcastMember, safetyMarginIndex, totIndex} = TrafficArchive(a).data{nowcastMember, 1, totIndex};
-          TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TrafficArchive(a).tDif{nowcastMember, 1, totIndex};
+            %Ova funkcija mijenja vrijeme prema tome koliki je TOT prema
+            %razdiobi i ignorira one linije koje su prema novom vremenu
+            %prije vremena simulacije
+          [ACarchive] = TOT_decrement(ACarchive,time_to_EOBT/60, entrytime, totIndex);
+          ACarchiveAll{nowcastMember, safetyMarginIndex,totIndex} = ACarchive;
+          
+          ACarchiveAll{nowcastMember, safetyMarginIndex,totIndex} = ACarchive;
+          ACstateAll{nowcastMember,safetyMarginIndex,totIndex} = ACstate;
+          ACcontrolAll{nowcastMember,safetyMarginIndex,totIndex} = ACcontrol;
+          WPTiAll{nowcastMember,safetyMarginIndex,totIndex} = WPTi;
+          ACmodeAll{nowcastMember,safetyMarginIndex,totIndex} = ACmode;
+          
+          TimedifAll{nowcastMember,safetyMarginIndex,totIndex} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
+          TrafficArchive(a).name = flight_pos(a).name;
+          TrafficArchive(a).data{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll{nowcastMember,safetyMarginIndex,totIndex};
+          TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{nowcastMember,safetyMarginIndex,totIndex};
         end
    end
 end

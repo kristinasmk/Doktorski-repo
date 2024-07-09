@@ -60,7 +60,7 @@ ACalt=ACstate(3);
 Altp=abs(ACalt*3.28084/1000-Altlist);
 [~,altFL]=min(Altp);
 
- %Ova petlja stavlja NaN ako je Loctime NaN, tj. ako je zrakoplov u zraku u
+ %Ova petlja stavlja NaN ako je Loctime NaN, tj. ako je zrakoplov u zraku 
  %na poèetku simulacije 
 if isnan(Loctime)
     ACarchive(timestep,1)=NaN; 
@@ -360,31 +360,6 @@ while ACmode.StillFlying
     ACarchive(timestep,20)=waypoints(WPTi).z;
     ACarchive(timestep,21)=currenttime; 
     % ACarchive(21)=waypoints(WPTi).t;
-    end
-    
-    % if Loctime is smaller than desired_time, lines won't be written
-    if (currenttime < desired_time) && (currenttime > endtime)
-    ACarchive(timestep,1)=NaN; 
-    ACarchive(timestep,2)=NaN;
-    ACarchive(timestep,3)=NaN;
-    ACarchive(timestep,4)=NaN;
-    ACarchive(timestep,5)=NaN;
-    ACarchive(timestep,6)=NaN;
-    ACarchive(timestep,7)=NaN;
-    ACarchive(timestep,8)=NaN;
-    ACarchive(timestep,9)=NaN;
-    ACarchive(timestep,10)=NaN;
-    ACarchive(timestep,11)=NaN; 
-    ACarchive(timestep,12)=NaN;
-    ACarchive(timestep,13)=NaN;
-    ACarchive(timestep,14)=NaN;    
-    ACarchive(timestep,15)=NaN;
-    ACarchive(timestep,16)=NaN;
-    ACarchive(timestep,17)=NaN;
-    ACarchive(timestep,18)=NaN;
-    ACarchive(timestep,19)=NaN;
-    ACarchive(timestep,20)=NaN;
-    ACarchive(timestep,21)=NaN; 
     end
     
     % calculate next ACstate

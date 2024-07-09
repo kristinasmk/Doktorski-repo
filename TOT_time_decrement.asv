@@ -1,0 +1,31 @@
+function [ACarchive] = TOT_time_decrement (ACarchive, time_to_EOBT, entrytime, totIndex)
+
+[TOT_time_sec, TOT_increments] = TOT_uncertainty(time_to_EOBT/60, entrytime);
+
+if isnan(entrytime)
+    ACarchive(:,1)=NaN; 
+    ACarchive(:,2)=NaN;
+    ACarchive(:,3)=NaN;
+    ACarchive(,4)=NaN;
+    ACarchive(timestep,5)=NaN;
+    ACarchive(timestep,6)=NaN;
+    ACarchive(timestep,7)=NaN;
+    ACarchive(timestep,8)=NaN;
+    ACarchive(timestep,9)=NaN;
+    ACarchive(timestep,10)=NaN;
+    ACarchive(timestep,11)=NaN; 
+    ACarchive(timestep,12)=NaN;
+    ACarchive(timestep,13)=NaN;
+    ACarchive(timestep,14)=NaN;    
+    ACarchive(timestep,15)=NaN;
+    ACarchive(timestep,16)=NaN;
+    ACarchive(timestep,17)=NaN;
+    ACarchive(timestep,18)=NaN;
+    ACarchive(timestep,19)=NaN;
+    ACarchive(timestep,20)=NaN;
+    ACarchive(timestep,21)=NaN; 
+else  
+
+ACarchive(:,21) = ACarchive(:,21) + TOT_increments(totIndex);
+
+end
