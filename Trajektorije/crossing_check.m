@@ -2,7 +2,7 @@
 %checking if initial flight planned route crosses any cloud polygon
 %returns the value 0 if clouds are not crossed and value 1 if they are
 
-function [allClouddata, intersected, intersected_points] = crossing_check (Clouddata, AstarGrid, waypoints,nowcastMember)
+function [allClouddata, intersected, intersection_points] = crossing_check (Clouddata, AstarGrid, waypoints,nowcastMember)
 
 CurrentCloudData = Clouddata(:, :, nowcastMember, 3);
 allClouddata = {};
@@ -13,13 +13,13 @@ for cpos = 1: length(CurrentCloudData)
     allClouddata = [allClouddata; Data];
 end
 
-[CloudsAll, cloudMap, CloudAlt,cloudMap3D] = cloudMerge_svrljanje (allClouddata,AstarGrid)
+[CloudsAll, cloudMap, CloudAlt,cloudMap3D] = cloudMerge_svrljanje (allClouddata,AstarGrid);
 
-%dodati dio koda gdje se gleda sijeku li se ruta i bilo koji oblak koji je
+%dio koda gdje se gleda sijeku li se ruta i bilo koji oblak koji je
 %deifiniran unutar CloudsAll
 
-waypoint_x = waypoint(:, 2);
-waypoint_y = waypoint(:, 1);
+waypoint_x = [waypoints.x];
+waypoint_y = [waypoints.y];
 intersected = 0;
 intersection_points = [];
 

@@ -19,9 +19,9 @@ SM = [10, 12.5, 15];
 %check simulation time is equal to time in nowcast_polygons_final2
 load polygons3d.mat;
 Clouddata = polygons3d;
-NumofNowcastMembers = 15;
-NumOfSafetyMargins = 3;
-NumOfTOT = 10;
+NumofNowcastMembers = 1;
+NumOfSafetyMargins = 1;
+NumOfTOT = 1;
 
 % [Clouddata, NumofNowcastMembers, NumOfSafetyMargins] = nowcast_polygons_final2 (nowcast,SM);
 load NeighboorsTable2 NeighboorsTable
@@ -79,15 +79,11 @@ end
 if entrytime <= desired_time
     TOT_time_sec = [entrytime, nan(1,9)];
 end
-
     
 % Iterate over each nowcast member
     for nowcastMember = 1:NumofNowcastMembers
         
-        %provjera presijeca li planirana ruta bilo koji oblak
-        [~, intersected, intersected_points] = crossing_check(Clouddata, AstarGrid, flight_pos(a).waypoints, nowcastMember)  
-        
- % Iterate over each safety margin   
+     % Iterate over each safety margin   
     for safetyMarginIndex = 1:NumOfSafetyMargins
  %iterate over each TOT value
     for totIndex = 1:NumOfTOT
@@ -201,27 +197,12 @@ ACmodeAll{nowcastMember,safetyMarginIndex,totIndex} = ACmode;
 
 ACsimtime=size(ACarchiveAll{nowcastMember}, safetyMarginIndex,totIndex);
 ACso6time=strcmp({flight.name},flight_pos(a).name);
-    if flight(ACso6time).time(end,2)>endtime
-        et=endtime;
-    else
-        et=flight(ACso6time).time(end,2);
+ toc          
     end
-    ACso6time=et-flight_pos(a).spawntime;
-
-TimedifAll{nowcastMember,safetyMarginIndex,totIndex} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
-
-TrafficArchive(a).name = flight_pos(a).name;
-TrafficArchive(a).data{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll{nowcastMember,safetyMarginIndex,totIndex};
-TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{nowcastMember,safetyMarginIndex,totIndex};
-toc
-   end
-     
-   end
-   end
+    end
 end
 save ('TrafficArchive.mat', 'TrafficArchive');
 %save ('leadTimeInSeconds', 'leadTimeInSeconds');
-
  %% Visualisation
 
  %figure;
@@ -243,3 +224,4 @@ save ('TrafficArchive.mat', 'TrafficArchive');
 %[f]=makemapbaseEur([40 50], [0 30]); %test - creates map base
 %marks = addflightstomap(f, flight_pos); %test - adds markers at A/C pos
 %delete(marks) %test - deletes markers (for animation purposes)
+end

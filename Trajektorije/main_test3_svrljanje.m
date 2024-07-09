@@ -19,9 +19,9 @@ SM = [10, 12.5, 15];
 %check simulation time is equal to time in nowcast_polygons_final2
 load polygons3d.mat;
 Clouddata = polygons3d;
-NumofNowcastMembers = 15;
+NumofNowcastMembers = 2;
 NumOfSafetyMargins = 3;
-NumOfTOT = 10;
+NumOfTOT = 2;
 
 % [Clouddata, NumofNowcastMembers, NumOfSafetyMargins] = nowcast_polygons_final2 (nowcast,SM);
 load NeighboorsTable2 NeighboorsTable
@@ -85,10 +85,14 @@ end
     for nowcastMember = 1:NumofNowcastMembers
         
         %provjera presijeca li planirana ruta bilo koji oblak
-        [!, intersected] = crossing_check(Clouddata, AstarGrid, flight_pos(a).waypoints, nowcastMember)  
-        
- % Iterate over each safety margin   
-    for safetyMarginIndex = 1:NumOfSafetyMargins
+        [~, intersected, intersected_points] = crossing_check(Clouddata, AstarGrid, flight_pos(a).waypoints, nowcastMember);  
+        if intersected ==1
+            safetyMarginRange = 1:NumOfSafetyMargins;
+        else
+            safetyMarginRange = 1;
+        end
+     % Iterate over each safety margin   
+    for safetyMarginIndex = safetyMarginRange
  %iterate over each TOT value
     for totIndex = 1:NumOfTOT
    % General simulation parameters:
@@ -213,11 +217,26 @@ TimedifAll{nowcastMember,safetyMarginIndex,totIndex} = [ACsimtime ACso6time ACsi
 TrafficArchive(a).name = flight_pos(a).name;
 TrafficArchive(a).data{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll{nowcastMember,safetyMarginIndex,totIndex};
 TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{nowcastMember,safetyMarginIndex,totIndex};
-toc
+                  
+    end
+    end
+   %if intersected is 0, copy the data to the other safety margins
+if intersected ==0
+    for safetyMarginIndex = 2:NumOfSafetyMargins
+        for totIndex = 1:NumofTOT
+          ACarchiveAll{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll{nowcastMember, 1, totIndex};
+          ACstateAll{nowcastMember, safetyMarginIndex, totIndex} = ACstateAll{nowcastMember, 1, totIndex};
+          ACcontrolAll{nowcastMember, safetyMarginIndex, totIndex} = ACcontrolAll{nowcastMember, 1, totIndex};
+          WPTiAll{nowcastMember, safetyMarginIndex, totIndex} = WPTiAll{nowcastMember, 1, totIndex};
+          ACmodeAll{nowcastMember, safetyMarginIndex, totIndex} = ACmodeAll{nowcastMember, 1, totIndex};
+          TimedifAll{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{nowcastMember, 1, totIndex};
+          TrafficArchive(a).data{nowcastMember, safetyMarginIndex, totIndex} = TrafficArchive(a).data{nowcastMember, 1, totIndex};
+          TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TrafficArchive(a).tDif{nowcastMember, 1, totIndex};
+        end
    end
-     
-   end
-   end
+end
+    end
+    toc
 end
 save ('TrafficArchive.mat', 'TrafficArchive');
 %save ('leadTimeInSeconds', 'leadTimeInSeconds');
