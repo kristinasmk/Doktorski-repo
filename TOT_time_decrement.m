@@ -1,0 +1,3 @@
+function [ACarchive] = TOT_time_decrement (ACarchive, time_to_EOBT/60,...
+    entrytime)
+

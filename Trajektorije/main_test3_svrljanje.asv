@@ -222,13 +222,11 @@ TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{
                   
     end
     end
-   %if intersected is 0, copy the data to the other safety margins and
-   %adapt TOT time for other members
+   %if intersected is 0, copy the data to the other safety margins
 if intersected ==0
     for safetyMarginIndex = 2:NumOfSafetyMargins
         for totIndex = 1:NumofTOT
-            [ACarchive] = TOT_time_decrement(ACarchive,time_to_EOBT/60, entrytime);
-            
+            [] = TOT_time_decrement()
           ACarchiveAll{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll{nowcastMember, 1, totIndex};
           ACstateAll{nowcastMember, safetyMarginIndex, totIndex} = ACstateAll{nowcastMember, 1, totIndex};
           ACcontrolAll{nowcastMember, safetyMarginIndex, totIndex} = ACcontrolAll{nowcastMember, 1, totIndex};

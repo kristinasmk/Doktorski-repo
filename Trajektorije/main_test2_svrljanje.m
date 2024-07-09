@@ -19,7 +19,7 @@ SM = [10, 12.5, 15];
 %check simulation time is equal to time in nowcast_polygons_final2
 load polygons3d.mat;
 Clouddata = polygons3d;
-NumofNowcastMembers = 1;
+NumofNowcastMembers = 15;
 NumOfSafetyMargins = 1;
 NumOfTOT = 1;
 
