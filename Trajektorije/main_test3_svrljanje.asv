@@ -230,7 +230,8 @@ if intersected ==0
             %razdiobi
           [ACarcho] = TOT_decrement(ACarchive,time_to_EOBT/60, entrytime, totIndex);
           
-          ACarchiveAll{nowcastMember, safetyMarginIndex,totIndex} = ACarcho(:,:,totIndex);
+          ACarchiveAll{nowcastMember, safetyMarginIndex,totIndex} = ACarchive;
+          
           ACarchiveAll{nowcastMember, safetyMarginIndex,totIndex} = ACarchive;
           ACstateAll{nowcastMember,safetyMarginIndex,totIndex} = ACstate;
           ACcontrolAll{nowcastMember,safetyMarginIndex,totIndex} = ACcontrol;

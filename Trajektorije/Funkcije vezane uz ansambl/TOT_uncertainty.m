@@ -1,4 +1,4 @@
-function [TOT_time_sec, TOT_increments] = TOT_uncertainty(time_to_EOBT, departure_planned_time)
+function [TOT_time_sec, selected_dep_times] = TOT_uncertainty(time_to_EOBT, departure_planned_time)
     % Define the intervals (in minutes)
     
 %      time_to_EOBT = 0; %in minutes
