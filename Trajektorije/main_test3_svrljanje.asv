@@ -20,9 +20,9 @@ SM = [10, 12.5, 15];
 %check simulation time is equal to time in nowcast_polygons_final2
 load polygons3d.mat;
 Clouddata = polygons3d;
-NumofNowcastMembers = 3;
+NumofNowcastMembers = 15;
 NumOfSafetyMargins = 3;
-NumOfTOT = 3;
+NumOfTOT = 10;
 
 % [Clouddata, NumofNowcastMembers, NumOfSafetyMargins] = nowcast_polygons_final2 (nowcast,SM);
 load NeighboorsTable2 NeighboorsTable
@@ -38,7 +38,7 @@ FlownArea=[39 6 58 23];
 raw_so6= 'Traffic0109.so6';
 raw_allft = '20210901Initial.ALL_FT+';
 desired_time=8*3600;
-endtime=desired_time+2*3600;
+endtime=desired_time+2.5*3600;
 
 [allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
 
@@ -47,7 +47,7 @@ endtime=desired_time+2*3600;
 
 %data importer (so6reader function) - import ac data from so6 history from NEST 
 
-% [flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
+ [flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
  %load flightdata07072.mat
 
 load ('flight_hist.mat', 'flight_hist');
@@ -99,7 +99,7 @@ end
  %iterate over each TOT value
     for totIndex = TOTRange
    % General simulation parameters:
-    SimulationTime=2*3600; %duration of simulation, should be enough for all realistic scenarios.
+    SimulationTime=2.5*3600; %duration of simulation, should be enough for all realistic scenarios.
     ACarchive=zeros(SimulationTime,20);
     
     FFP=flight_pos(a).waypoints;
@@ -183,6 +183,8 @@ end
  ACmode, dT, SimulationTime, WPTi, FFP, flight_pos(a).waypoints, opsdata, apfdata,...
  GP, const,ACarchive,AstarGrid,CurrentCloudData,NeighboorsTable, TOT_time_sec(totIndex),endtime,APlist, desired_time);
 
+ACarchive=ACarchive(~(ACarchive(:,1)==0),:);
+
 % figure, hold on, grid on
 % for ii = 4:19
 %     aux = CurrentCloudData{ii,2};
@@ -228,20 +230,18 @@ if intersected ==0
             %Ova funkcija mijenja vrijeme prema tome koliki je TOT prema
             %razdiobi
           [ACarcho, TOT_increments] = TOT_decrement(ACarchive,time_to_EOBT/60, entrytime);
-    for i = 1:NumOfTOT-1 
-          ACarchive = ACarcho(:,:,i);
-          ACarchiveAll{nowcastMember, safetyMarginIndex,i+1} = ACarchive;
-          ACstateAll{nowcastMember,safetyMarginIndex,i+1} = ACstate;
-          ACcontrolAll{nowcastMember,safetyMarginIndex,i+1} = ACcontrol;
-          WPTiAll{nowcastMember,safetyMarginIndex,i+1} = WPTi;
-          ACmodeAll{nowcastMember,safetyMarginIndex,i+1} = ACmode;
+    for i = 1:NumOfTOT 
+          ACwithTOT = ACarcho(:,:,i);
+          ACarchiveAll{nowcastMember, safetyMarginIndex,i} = ACwithTOT;
+          ACstateAll{nowcastMember,safetyMarginIndex,i} = ACstate;
+          ACcontrolAll{nowcastMember,safetyMarginIndex,i} = ACcontrol;
+          WPTiAll{nowcastMember,safetyMarginIndex,i} = WPTi;
+          ACmodeAll{nowcastMember,safetyMarginIndex,i} = ACmode;
           
-          
-        ACarchive=ACarchive(~(ACarchive(:,1)==0),:);  
-          TimedifAll{nowcastMember,safetyMarginIndex,i+1} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
-%           TrafficArchive(a).name = flight_pos(a).name;
-          TrafficArchive(a).data{nowcastMember, safetyMarginIndex, i+1} = ACarchiveAll{nowcastMember,safetyMarginIndex,i+1};
-          TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, i+1} = TimedifAll{nowcastMember,safetyMarginIndex,i+1};
+          TimedifAll{nowcastMember,safetyMarginIndex,i} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
+%         TrafficArchive(a).name = flight_pos(a).name;
+          TrafficArchive(a).data{nowcastMember, safetyMarginIndex, i} = ACarchiveAll{nowcastMember,safetyMarginIndex,i};
+          TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, i} = TimedifAll{nowcastMember,safetyMarginIndex,i};
     end
    end
 end

@@ -14,6 +14,7 @@ allClouddata = {};
 % end
 
 load('allClouddata.mat')
+
 [CloudsAll, cloudMap, CloudAlt,cloudMap3D] = cloudMerge_svrljanje (allClouddata,AstarGrid);
 
 %dio koda gdje se gleda sijeku li se ruta i bilo koji oblak koji je
