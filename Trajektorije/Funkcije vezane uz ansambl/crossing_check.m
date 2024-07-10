@@ -12,7 +12,7 @@ for cpos = 1: length(CurrentCloudData)
     
     allClouddata = [allClouddata; Data];
 end
-
+save ('allClouddata', allClouddata');
 [CloudsAll, cloudMap, CloudAlt,cloudMap3D] = cloudMerge_svrljanje (allClouddata,AstarGrid);
 
 %dio koda gdje se gleda sijeku li se ruta i bilo koji oblak koji je

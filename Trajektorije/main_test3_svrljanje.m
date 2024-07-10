@@ -1,4 +1,5 @@
 %To add path of the Github repository
+clear
 addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
 
 load 'C:\Matlab\USE\nowcast_no_safety\nowcast_without_margin.mat';
@@ -91,7 +92,7 @@ end
         else
             safetyMarginRange = 1;
             TOTRange = 1;
-            TOT_time_sec = [entrytime, nan(1,9)];
+%             TOT_time_sec = [entrytime, nan(1,9)];
         end
      % Iterate over each safety margin   
     for safetyMarginIndex = safetyMarginRange
@@ -228,21 +229,24 @@ if intersected ==0
     for safetyMarginIndex = 1:NumOfSafetyMargins
             %Ova funkcija mijenja vrijeme prema tome koliki je TOT prema
             %razdiobi
-          [ACarcho] = TOT_decrement(ACarchive,time_to_EOBT/60, entrytime, totIndex);
+          [ACarcho, TOT_increments] = TOT_decrement(ACarchive,time_to_EOBT/60, entrytime);
+    for i = 1:NumOfTOT-1 
+          ACarchive = ACarcho(:,:,i);
+          ACarchiveAll{nowcastMember, safetyMarginIndex,i+1} = ACarchive;
+          ACstateAll{nowcastMember,safetyMarginIndex,i+1} = ACstate;
+          ACcontrolAll{nowcastMember,safetyMarginIndex,i+1} = ACcontrol;
+          WPTiAll{nowcastMember,safetyMarginIndex,i+1} = WPTi;
+          ACmodeAll{nowcastMember,safetyMarginIndex,i+1} = ACmode;
           
-          ACarchiveAll{nowcastMember, safetyMarginIndex,totIndex} = ACarcho(:,:,totIndex);
-          ACarchiveAll{nowcastMember, safetyMarginIndex,totIndex} = ACarchive;
-          ACstateAll{nowcastMember,safetyMarginIndex,totIndex} = ACstate;
-          ACcontrolAll{nowcastMember,safetyMarginIndex,totIndex} = ACcontrol;
-          WPTiAll{nowcastMember,safetyMarginIndex,totIndex} = WPTi;
-          ACmodeAll{nowcastMember,safetyMarginIndex,totIndex} = ACmode;
-          
-          TimedifAll{nowcastMember,safetyMarginIndex,totIndex} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
-          TrafficArchive(a).name = flight_pos(a).name;
-          TrafficArchive(a).data{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll{nowcastMember,safetyMarginIndex,totIndex};
-          TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{nowcastMember,safetyMarginIndex,totIndex};
+          ACarchive=ACarchive(~(ACarchive(:,1)==0),:);  
+          TimedifAll{nowcastMember,safetyMarginIndex,i+1} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
+%         TrafficArchive(a).name = flight_pos(a).name;
+          TrafficArchive(a).data{nowcastMember, safetyMarginIndex, i+1} = ACarchiveAll{nowcastMember,safetyMarginIndex,i+1};
+          TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, i+1} = TimedifAll{nowcastMember,safetyMarginIndex,i+1};
+    end
    end
 end
+
     end
     toc
 end

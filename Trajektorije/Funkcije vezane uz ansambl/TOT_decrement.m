@@ -1,5 +1,5 @@
 %
-function [ACarchO] = TOT_decrement (ACarchive, time_to_EOBT, entrytime, totIndex)
+function [ACarchO,TOT_increments] = TOT_decrement (ACarchive, time_to_EOBT, entrytime)
 
 [~, TOT_increments] = TOT_uncertainty(time_to_EOBT, entrytime);
 
@@ -11,10 +11,8 @@ for i = 2:length(TOT_increments)
  transformed_increments(i) = TOT_increments(i)- TOT_increments(i-1);
 
  ACarchive(:, 21)=LT+transformed_increments(i);  
- ACarchO(:,:,i)=ACarchive;
+ ACarchO(:,:,i-1)=ACarchive;
  
 end
-% 
-% ACarchive(:, 21) = ACarchive(:, 21) + transformed_increments(i);
-% end
+
 
