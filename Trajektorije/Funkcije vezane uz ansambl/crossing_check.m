@@ -7,12 +7,13 @@ function [allClouddata, intersected, intersection_points] = crossing_check (Clou
 CurrentCloudData = Clouddata(:, :, nowcastMember, 3);
 allClouddata = {};
 
-for cpos = 1: length(CurrentCloudData)
-    Data = CurrentCloudData{cpos, 3};
-    
-    allClouddata = [allClouddata; Data];
-end
-save ('allClouddata', allClouddata');
+% for cpos = 1: length(CurrentCloudData)
+%     Data = CurrentCloudData{cpos, 3};
+%     
+%     allClouddata = [allClouddata; Data];
+% end
+
+load('allClouddata.mat')
 [CloudsAll, cloudMap, CloudAlt,cloudMap3D] = cloudMerge_svrljanje (allClouddata,AstarGrid);
 
 %dio koda gdje se gleda sijeku li se ruta i bilo koji oblak koji je
