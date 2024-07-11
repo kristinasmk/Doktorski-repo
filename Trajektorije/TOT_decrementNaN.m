@@ -1,6 +1,6 @@
 %this function changes the time of initially simulated route pa adding NaN
 %to routes without TOT unceratinty 
-function [ACarchO] = TOT_decrement_NaN (ACarchive, TOT_time_sec)
+function [ACarchO] = TOT_decrementNaN (ACarchive, TOT_time_sec)
 
 ACarchO=zeros(size(ACarchive,1),size(ACarchive,2),length(TOT_time_sec));
 

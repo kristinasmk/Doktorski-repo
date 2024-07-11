@@ -242,7 +242,7 @@ if intersected ==0 && time_to_EOBT > 0
 end
 if intersected ==0 && time_to_EOBT < 0
     for safetyMarginIndex = 1:NumOfSafetyMargins
-        [ACarcho] = TOT_decrement_NaN(ACarchive, TOT_time_sec);
+        [ACarcho] = TOT_decrementNaN(ACarchive, TOT_time_sec);
          for i = 1:NumOfTOT 
           ACwithTOT = ACarcho(:,:,i);
           ACarchiveAll{nowcastMember, safetyMarginIndex,i} = ACwithTOT;
@@ -254,8 +254,8 @@ if intersected ==0 && time_to_EOBT < 0
           TimedifAll{nowcastMember,safetyMarginIndex,i} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
 %         TrafficArchive(a).name = flight_pos(a).name;
           TrafficArchive(a).data{nowcastMember, safetyMarginIndex, i} = ACarchiveAll{nowcastMember,safetyMarginIndex,i};
-          TrafficArchive(a).tDif{n15owcastMember, safetyMarginIndex, i} = TimedifAll{nowcastMember,safetyMarginIndex,i};
-    end
+          TrafficArchive(a).tDif{n21owcastMember, safetyMarginIndex, i} = TimedifAll{nowcastMember,safetyMarginIndex,i};
+         end
     end
 end
 
