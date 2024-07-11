@@ -4,6 +4,7 @@ addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
 
 load 'C:\Matlab\USE\nowcast_no_safety\nowcast_without_margin.mat'; %loads weather product
 %load 'D:\Novi kod\data\RDT\Clouddata0109.mat'; 
+tic
 addpath(genpath(pwd));                  %adds all paths for all subdirs
 constants                              %imports constants struct
 GlobalParameters
@@ -18,9 +19,9 @@ SM = [10, 12.5, 15];
 %check simulation time is equal to time in nowcast_polygons_final2
 load polygons3d.mat;
 Clouddata = polygons3d;
-NumofNowcastMembers = 1;
-NumOfSafetyMargins = 1;
-NumOfTOT = 1;
+NumofNowcastMembers = 2;
+NumOfSafetyMargins = 3;
+NumOfTOT = 2;
 
 % [Clouddata, NumofNowcastMembers, NumOfSafetyMargins] = nowcast_polygons_final2 (nowcast,SM);
 load NeighboorsTable2 NeighboorsTable
@@ -55,9 +56,8 @@ flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
 
 TrafficArchive(length(flight_pos))=struct(); %variable that stores trajectories of all traffic
-for a=1%:length(flight_pos)
+for a=1:58%:length(flight_pos)
 %% generate each flight
-tic
 ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
 ACstateAll = cell (NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
 ACcontrolAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
@@ -254,7 +254,7 @@ if intersected ==0 && time_to_EOBT < 0
           TimedifAll{nowcastMember,safetyMarginIndex,i} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
 %         TrafficArchive(a).name = flight_pos(a).name;
           TrafficArchive(a).data{nowcastMember, safetyMarginIndex, i} = ACarchiveAll{nowcastMember,safetyMarginIndex,i};
-          TrafficArchive(a).tDif{n15owcastMember, safetyMarginIndex, i} = TimedifAll{nowcastMember,safetyMarginIndex,i};
+          TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, i} = TimedifAll{nowcastMember,safetyMarginIndex,i};
     end
     end
 end
