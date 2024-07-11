@@ -1,9 +1,5 @@
 function [AC,ACintent] = allftread2 (raw_allft, desired_time, endtime)
 
-% raw_allft = '20210901Initial.ALL_FT+';
-% desired_time = 8*3600;
-% endtime = 10*3600;
-
 %this function will read raw *.ALL_FT+ file obtained from NEST and filter
 %desired data.
 %output of allftread function will be struct of all data sorted per aircraft id
@@ -36,8 +32,8 @@ ACintent=struct();
     eobt = zeros(size(eobt_raw));
     for i = 1:numel(eobt_raw)
         % Convert to string and then extract
-        eobt_str = string(eobt_raw{i});  % Convert cell to string
-        eobt_num = str2double(eobt_str);  % Convert string to numerical value
+        eobt_str = string(eobt_raw{i});  
+        eobt_num = str2double(eobt_str);  
         
         % Convert numerical value to string
         eobt_str_formatted = sprintf('%012.0f', eobt_num);  % Ensure 12 digits for YYYYMMDDHHMMSS
@@ -57,7 +53,7 @@ dat=[str2num(t(:,5:6)),str2num(t(:,7:8))];
 t=time_conv(t(:,end-5:end)); %converting HHMMSS to time in seconds SSSSS
 t=[t,dat];
 coords=char(newStr(:,7));   %extracting coords
-coords=coord_conv(coords); %splitting coordis
+coords=coord_conv(coords); %splitting coords
 froute=rfilter(newStr);    %removing automatic generated points marked with ! or *
 
 

@@ -2,14 +2,13 @@
 clear
 addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
 
-load 'C:\Matlab\USE\nowcast_no_safety\nowcast_without_margin.mat';
+load 'C:\Matlab\USE\nowcast_no_safety\nowcast_without_margin.mat'; %loads weather product
 %load 'D:\Novi kod\data\RDT\Clouddata0109.mat'; 
 tic
 addpath(genpath(pwd));                  %adds all paths for all subdirs
 constants                              %imports constants struct
 GlobalParameters
 warning('off','MATLAB:polyshape:repairedBySimplify');
-
 
 %weather data import
 Wind=[0,0,0];
@@ -29,36 +28,35 @@ load NeighboorsTable2 NeighboorsTable
 load ACsynonyms.mat
 load AirportList.mat
 
+%dimensions of a FlownArea should match AstarGrid
 AstarGrid.lon1=6;
 AstarGrid.lat1=39;
 AstarGrid.lon2=23;
 AstarGrid.lat2=58;
 
 FlownArea=[39 6 58 23];
-raw_so6= 'Traffic0109.so6';
-raw_allft = '20210901Initial.ALL_FT+';
-desired_time=8*3600;
-endtime=desired_time+2.5*3600;
+raw_so6= 'Traffic0109.so6'; %Traffic from Nest
+raw_allft = '20210901Initial.ALL_FT+'; %FFP
+desired_time=8*3600; %start of simulation
+endtime=desired_time+2.5*3600; %end of simulation
 
-[allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
+% [allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
+load ('allFPL.mat', 'allFPL');
+load ( 'FPLintent.mat', 'FPLintent');
 
-%filed flight plan should be copied since waypoints will change to mitigate
-%clouds
-
-%data importer (so6reader function) - import ac data from so6 history from NEST 
-
- [flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
- %load flightdata07072.mat
+%function to extract flights within desired time and area
+% [flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
 
 load ('flight_hist.mat', 'flight_hist');
 load ('flight_pos.mat', 'flight_pos');
 load ('flight.mat', 'flight');
 
+%function to add EOBT time to flight_pos
 flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
 
-TrafficArchive(length(flight_pos))=struct();
-for a=323%:length(flight_pos)
+TrafficArchive(length(flight_pos))=struct(); %variable that stores trajectories of all traffic
+for a=538%:length(flight_pos)
 %% generate each flight
 ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
 ACstateAll = cell (NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
@@ -75,8 +73,15 @@ entrytime = flight_pos(a).spawntime;
 
 if entrytime > desired_time
     time_to_EOBT = flight_pos(a).eobt - desired_time; 
-    [TOT_time_sec, selected_dep_times] = TOT_uncertainty(time_to_EOBT/60, entrytime);
+    if time_to_EOBT < 0 %if aircraft enters FlownArea after the simulatio start but was airborne before simulation, TOT uncertainty is not applicable
+        TOT_time_sec = [entrytime, nan(1,9)];
+    else
+    %this function provides all possible TOT based on TOT uncertainty distribution
+    %applicable only on those aircraft who are not airborne at the beginning of simulation
+    [TOT_time_sec, selected_dep_times] = TOT_uncertainty(time_to_EOBT/60, entrytime); 
+    end
 end
+
 if entrytime <= desired_time
     TOT_time_sec = [entrytime, nan(1,9)];
 end
@@ -92,8 +97,8 @@ end
         else
             safetyMarginRange = 1;
             TOTRange = 1;
-%             TOT_time_sec = [entrytime, nan(1,9)];
         end
+        
      % Iterate over each safety margin   
     for safetyMarginIndex = safetyMarginRange
  %iterate over each TOT value
@@ -122,18 +127,14 @@ end
     ACmode.tropo=false; %Is aircraft above tropopause?
     ACmode.incloud=0; %It can be 0 (out) or 1 (in) 
     
-    
     %initial AC movement variables:
     WPTi=2; %/Waypoint index. It marks the next waypoint in the waypoint list.
     ACmode.StillFlying=true;
-    
-    
-    
+     
     %reading BADA data
 
     AC=char(ACsynonyms(strcmp(ACsynonyms(:,1),char(flight_pos(a).type)),2));
 
-        
     opsdata = readOPFfile([AC,'.OPF']);
     apfdata = readAPFfile([AC,'.APF']);
     
@@ -162,8 +163,7 @@ end
    elseif deg2nm(distance(FlightPath(1).y,FlightPath(1).x,FlightPath(end).y,FlightPath(end).x))<250
        ACstate(6)=1000*((opsdata.mref-opsdata.mmin)*0.2+opsdata.mmin);
    end
-   
-   
+      
     ACcontrol=[300,0,0,0];
     dT=0;
 
@@ -172,9 +172,7 @@ end
     CD = DragCoefficient(CL, opsdata.Cd0.CR,opsdata.Cd2.CR,opsdata.Cd0.geardown);
     
     ACcontrol(4)=CD;   
-  
-
-%% simulating traffic
+ %% simulating traffic
 
 % Get the Clouddata for the current nowcast member
     CurrentCloudData = Clouddata(:, :, nowcastMember, safetyMarginIndex);
@@ -219,16 +217,13 @@ TimedifAll{nowcastMember,safetyMarginIndex,totIndex} = [ACsimtime ACso6time ACsi
 
 TrafficArchive(a).name = flight_pos(a).name;
 TrafficArchive(a).data{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll{nowcastMember,safetyMarginIndex,totIndex};
-TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{nowcastMember,safetyMarginIndex,totIndex};
-                  
+TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{nowcastMember,safetyMarginIndex,totIndex};         
     end
     end
-   %if intersected is 0, copy the data to the other safety margins and
-   %adapt TOT time for other members
-if intersected ==0
+%if intersected is 0 and , copy the data to the other safety margins and adapt TOT time for other members
+if intersected ==0 && time_to_EOBT > 0
     for safetyMarginIndex = 1:NumOfSafetyMargins
-            %Ova funkcija mijenja vrijeme prema tome koliki je TOT prema
-            %razdiobi
+          %Ova funkcija mijenja vrijeme prema tome koliki je TOT prema razdiobi
           [ACarcho, TOT_increments] = TOT_decrement(ACarchive,time_to_EOBT/60, entrytime);
     for i = 1:NumOfTOT 
           ACwithTOT = ACarcho(:,:,i);
@@ -243,12 +238,28 @@ if intersected ==0
           TrafficArchive(a).data{nowcastMember, safetyMarginIndex, i} = ACarchiveAll{nowcastMember,safetyMarginIndex,i};
           TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, i} = TimedifAll{nowcastMember,safetyMarginIndex,i};
     end
-   end
+    end
+end
+if intersected ==0 && time_to_EOBT < 0
+    for safetyMarginIndex = 1:NumOfSafetyMargins
+        [ACarcho] = TOT_decrement_NaN(ACarchive, TOT_time_sec);
+         for i = 1:NumOfTOT 
+          ACwithTOT = ACarcho(:,:,i);
+          ACarchiveAll{nowcastMember, safetyMarginIndex,i} = ACwithTOT;
+          ACstateAll{nowcastMember,safetyMarginIndex,i} = ACstate;
+          ACcontrolAll{nowcastMember,safetyMarginIndex,i} = ACcontrol;
+          WPTiAll{nowcastMember,safetyMarginIndex,i} = WPTi;
+          ACmodeAll{nowcastMember,safetyMarginIndex,i} = ACmode;
+          
+          TimedifAll{nowcastMember,safetyMarginIndex,i} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
+%         TrafficArchive(a).name = flight_pos(a).name;
+          TrafficArchive(a).data{nowcastMember, safetyMarginIndex, i} = ACarchiveAll{nowcastMember,safetyMarginIndex,i};
+          TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, i} = TimedifAll{nowcastMember,safetyMarginIndex,i};
+    end
+    end
 end
 
-    end
     toc
-end
 save ('TrafficArchive.mat', 'TrafficArchive');
 %save ('leadTimeInSeconds', 'leadTimeInSeconds');
 
@@ -273,3 +284,5 @@ save ('TrafficArchive.mat', 'TrafficArchive');
 %[f]=makemapbaseEur([40 50], [0 30]); %test - creates map base
 %marks = addflightstomap(f, flight_pos); %test - adds markers at A/C pos
 %delete(marks) %test - deletes markers (for animation purposes)
+    end
+end
