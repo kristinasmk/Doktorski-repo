@@ -6,7 +6,7 @@ addpath(genpath(pwd));                  %adds all paths for all subdirs
 %Load required data
 load 'C:\Matlab\USE\nowcast_no_safety\nowcast_without_margin.mat'; %loads weather product
 %load 'D:\Novi kod\data\RDT\Clouddata0109.mat'; 
-load polygons3d.mat;
+load polygons3d.mat; %polygons3d.mat is a product of function nowcast_polygins_final2
 load NeighboorsTable2 NeighboorsTable
 load ACsynonyms.mat
 load AirportList.mat
@@ -21,48 +21,38 @@ constants                              %imports constants struct
 GlobalParameters
 warning('off','MATLAB:polyshape:repairedBySimplify');
 
-%weather data import
+%Simulation parameters
 Wind=[0,0,0];
-%add safety margins
-SM = [10, 12.5, 15];
-
-%polygons3d.mat is a product of function nowcast_polygins_final2
-%check simulation time is equal to time in nowcast_polygons_final2
-
+SM = [10, 12.5, 15]; %add safety margins
 Clouddata = polygons3d;
-NumofNowcastMembers = 1;
-NumOfSafetyMargins = 1;
-NumOfTOT = 1;
+NumofNowcastMembers = 2;
+NumOfSafetyMargins = 3;
+NumOfTOT = 2;
+SimulationTime = 2.5 * 3600;
+desired_time=8*3600; %start of simulation
+endtime=desired_time+ SimulationTime; %end of simulation
 
 % [Clouddata, NumofNowcastMembers, NumOfSafetyMargins] = nowcast_polygons_final2 (nowcast,SM);
 
-
 %dimensions of a FlownArea should match AstarGrid
-AstarGrid.lon1=6;
-AstarGrid.lat1=39;
-AstarGrid.lon2=23;
-AstarGrid.lat2=58;
-
+AstarGrid = struct('lon1', 6, 'lat1', 39, 'lon2', 23, 'lat2', 58);
 FlownArea=[39 6 58 23];
+
+%Raw traffic Data files
 raw_so6= 'Traffic0109.so6'; %Traffic from Nest
 raw_allft = '20210901Initial.ALL_FT+'; %FFP
-desired_time=8*3600; %start of simulation
-endtime=desired_time+2.5*3600; %end of simulation
 
 % [allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
 
-
 %function to extract flights within desired time and area
 % [flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
-
-
 
 %function to add EOBT time to flight_pos
 flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
 
 TrafficArchive(length(flight_pos))=struct(); %variable that stores trajectories of all traffic
-for a=1%:length(flight_pos)
+for a=397%:length(flight_pos)
 %% generate each flight
 tic
 ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
@@ -90,6 +80,7 @@ if entrytime > desired_time
 end
 
 if entrytime <= desired_time
+    time_to_EOBT = flight_pos(a).eobt - desired_time; 
     TOT_time_sec = [entrytime, nan(1,9)];
 end
     
@@ -108,12 +99,12 @@ end
         
      % Iterate over each safety margin   
     for safetyMarginIndex = safetyMarginRange
+        
+   CurrentCloudData = Clouddata(:, :, nowcastMember, safetyMarginIndex);
  %iterate over each TOT value
     for totIndex = TOTRange
    % General simulation parameters:
-    SimulationTime=2.5*3600; %duration of simulation, should be enough for all realistic scenarios.
     ACarchive=zeros(SimulationTime,20);
-    
     FFP=flight_pos(a).waypoints;
     
     %all initial variables of aircraft modes must be defined on first
@@ -180,9 +171,6 @@ end
     
     ACcontrol(4)=CD;   
  %% simulating traffic
-
-% Get the Clouddata for the current nowcast member
-    CurrentCloudData = Clouddata(:, :, nowcastMember, safetyMarginIndex);
        
 [ACarchive, ACstate, ACcontrol,WPTi,ACmode] = trajectorygen_Weather_v5_svrljanje (ACstate, ACcontrol, Wind,...
  ACmode, dT, SimulationTime, WPTi, FFP, flight_pos(a).waypoints, opsdata, apfdata,...
