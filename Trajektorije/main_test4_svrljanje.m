@@ -10,8 +10,8 @@ load polygons3d.mat; %polygons3d.mat is a product of function nowcast_polygins_f
 load NeighboorsTable2 NeighboorsTable
 load ACsynonyms.mat
 load AirportList.mat
-load ('allFPL.mat', 'allFPL');
-load ( 'FPLintent.mat', 'FPLintent');
+% load ('allFPL.mat', 'allFPL');
+% load ( 'FPLintent.mat', 'FPLintent');
 load ('flight_hist.mat', 'flight_hist');
 load ('flight_pos.mat', 'flight_pos');
 load ('flight.mat', 'flight');
@@ -20,14 +20,14 @@ load ('flight.mat', 'flight');
 constants                              %imports constants struct
 GlobalParameters
 warning('off','MATLAB:polyshape:repairedBySimplify');
-
+ 
 %Simulation parameters
 Wind=[0,0,0];
 SM = [10, 12.5, 15]; %add safety margins
 Clouddata = polygons3d;
-NumofNowcastMembers = 2;
+NumofNowcastMembers = 15;
 NumOfSafetyMargins = 3;
-NumOfTOT = 2;
+NumOfTOT = 10;
 SimulationTime = 2.5 * 3600;
 desired_time=8*3600; %start of simulation
 endtime=desired_time+ SimulationTime; %end of simulation
@@ -42,7 +42,7 @@ FlownArea=[39 6 58 23];
 raw_so6= 'Traffic0109.so6'; %Traffic from Nest
 raw_allft = '20210901Initial.ALL_FT+'; %FFP
 
-% [allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
+[allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
 
 %function to extract flights within desired time and area
 % [flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
@@ -52,7 +52,7 @@ flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
 
 TrafficArchive(length(flight_pos))=struct(); %variable that stores trajectories of all traffic
-for a=397%:length(flight_pos)
+for a=16%:length(flight_pos)
 %% generate each flight
 tic
 ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
@@ -249,7 +249,7 @@ if intersected ==0 && time_to_EOBT < 0
           TimedifAll{nowcastMember,safetyMarginIndex,i} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
 %         TrafficArchive(a).name = flight_pos(a).name;
           TrafficArchive(a).data{nowcastMember, safetyMarginIndex, i} = ACarchiveAll{nowcastMember,safetyMarginIndex,i};
-          TrafficArchive(a).tDif{n21owcastMember, safetyMarginIndex, i} = TimedifAll{nowcastMember,safetyMarginIndex,i};
+          TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, i} = TimedifAll{nowcastMember,safetyMarginIndex,i};
          end
     end
 end

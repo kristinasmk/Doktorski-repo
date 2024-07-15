@@ -10,8 +10,8 @@ load polygons3d.mat;
 load NeighboorsTable2 NeighboorsTable
 load ACsynonyms.mat
 load AirportList.mat
-load ('allFPL.mat', 'allFPL');
-load ( 'FPLintent.mat', 'FPLintent');
+% load ('allFPL.mat', 'allFPL');
+% load ( 'FPLintent.mat', 'FPLintent');
 load ('flight_hist.mat', 'flight_hist');
 load ('flight_pos.mat', 'flight_pos');
 load ('flight.mat', 'flight');
@@ -49,7 +49,7 @@ raw_allft = '20210901Initial.ALL_FT+'; %FFP
 desired_time=8*3600; %start of simulation
 endtime=desired_time+2.5*3600; %end of simulation
 
-% [allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
+[allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
 
 
 %function to extract flights within desired time and area

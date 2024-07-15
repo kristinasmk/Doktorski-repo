@@ -130,6 +130,7 @@ while ACmode.StillFlying
     Altp=abs(ACalt*3.28084/1000-Altlist);
     oldFL=altFL;
     [~,altFL]=min(Altp);
+    
     %this part of code will look vertically if ac is in climb or descent to check for
     %cloud crossing and will use first upper level wehere ac cross cloud
     %for astar pathfinding
