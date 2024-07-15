@@ -1,22 +1,10 @@
 %To add path of the Github repository
 clear
 addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
-addpath(genpath(pwd));                  %adds all paths for all subdirs
 
-%Load required data
 load 'C:\Matlab\USE\nowcast_no_safety\nowcast_without_margin.mat'; %loads weather product
 %load 'D:\Novi kod\data\RDT\Clouddata0109.mat'; 
-load polygons3d.mat;
-load NeighboorsTable2 NeighboorsTable
-load ACsynonyms.mat
-load AirportList.mat
-% load ('allFPL.mat', 'allFPL');
-% load ( 'FPLintent.mat', 'FPLintent');
-load ('flight_hist.mat', 'flight_hist');
-load ('flight_pos.mat', 'flight_pos');
-load ('flight.mat', 'flight');
-
-%Define constants
+addpath(genpath(pwd));                  %adds all paths for all subdirs
 constants                              %imports constants struct
 GlobalParameters
 warning('off','MATLAB:polyshape:repairedBySimplify');
@@ -28,14 +16,16 @@ SM = [10, 12.5, 15];
 
 %polygons3d.mat is a product of function nowcast_polygins_final2
 %check simulation time is equal to time in nowcast_polygons_final2
-
+load polygons3d.mat;
 Clouddata = polygons3d;
-NumofNowcastMembers = 1;
-NumOfSafetyMargins = 1;
-NumOfTOT = 1;
+NumofNowcastMembers = 15;
+NumOfSafetyMargins = 3;
+NumOfTOT = 10;
 
 % [Clouddata, NumofNowcastMembers, NumOfSafetyMargins] = nowcast_polygons_final2 (nowcast,SM);
-
+load NeighboorsTable2 NeighboorsTable
+load ACsynonyms.mat
+load AirportList.mat
 
 %dimensions of a FlownArea should match AstarGrid
 AstarGrid.lon1=6;
@@ -49,20 +39,23 @@ raw_allft = '20210901Initial.ALL_FT+'; %FFP
 desired_time=8*3600; %start of simulation
 endtime=desired_time+2.5*3600; %end of simulation
 
-[allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
-
+% [allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
+load ('allFPL.mat', 'allFPL');
+load ( 'FPLintent.mat', 'FPLintent');
 
 %function to extract flights within desired time and area
 % [flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
 
-
+load ('flight_hist.mat', 'flight_hist');
+load ('flight_pos.mat', 'flight_pos');
+load ('flight.mat', 'flight');
 
 %function to add EOBT time to flight_pos
 flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
 
 TrafficArchive(length(flight_pos))=struct(); %variable that stores trajectories of all traffic
-for a=1%:length(flight_pos)
+for a=16%:length(flight_pos)
 %% generate each flight
 tic
 ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
@@ -249,7 +242,7 @@ if intersected ==0 && time_to_EOBT > 0
 end
 if intersected ==0 && time_to_EOBT < 0
     for safetyMarginIndex = 1:NumOfSafetyMargins
-        [ACarcho] = TOT_decrementNaN(ACarchive, TOT_time_sec);
+        [ACarcho] = TOT_decrement_NaN(ACarchive, TOT_time_sec);
          for i = 1:NumOfTOT 
           ACwithTOT = ACarcho(:,:,i);
           ACarchiveAll{nowcastMember, safetyMarginIndex,i} = ACwithTOT;
@@ -262,7 +255,7 @@ if intersected ==0 && time_to_EOBT < 0
 %         TrafficArchive(a).name = flight_pos(a).name;
           TrafficArchive(a).data{nowcastMember, safetyMarginIndex, i} = ACarchiveAll{nowcastMember,safetyMarginIndex,i};
           TrafficArchive(a).tDif{n21owcastMember, safetyMarginIndex, i} = TimedifAll{nowcastMember,safetyMarginIndex,i};
-         end
+    end
     end
 end
 
