@@ -45,7 +45,7 @@ raw_allft = '20210901Initial.ALL_FT+'; %FFP
 [allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
 
 %function to extract flights within desired time and area
-% [flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
+%[flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
 
 %function to add EOBT time to flight_pos
 flight_pos = EOBTinput (FPLintent, flight_pos);
