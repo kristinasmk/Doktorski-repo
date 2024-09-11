@@ -270,14 +270,5 @@ save ('TrafficArchive.mat', 'TrafficArchive');
 %     hold on
 %      end
 %  end
-
-
-
-%complexity assessment
-
-%visualization and analysis
-%[f]=makemapbaseEur([40 50], [0 30]); %test - creates map base
-%marks = addflightstomap(f, flight_pos); %test - adds markers at A/C pos
-%delete(marks) %test - deletes markers (for animation purposes)
     end
 end
