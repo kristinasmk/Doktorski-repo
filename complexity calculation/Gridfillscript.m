@@ -3,7 +3,7 @@ addpath(genpath(pwd))
 %grid filling
 
 %create PRU grid
-[grids,polygon,dims] = gridcreate (10,45,18,50,20,100,450);
+[grids,polygon,dims] = gridcreate (9,45,18,50,20,100,450);
 
 %load traffic
 load Tps.mat

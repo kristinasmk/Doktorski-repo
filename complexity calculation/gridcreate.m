@@ -14,7 +14,7 @@ function [grids,polygon,dimensions] = gridcreate (lon1,lat1,lon2,lat2,raster,FL1
 % state lower left corner (lon1,lat1) and upper right corner of grid (lon2,lat2))
 
 %since PRU complexity shift grid to compensate for errors caused by
-%aircrafts flying close to border fallowing code will crease shift in each
+%aircrafts flying close to border fallowing code will create shift in each
 %grid axis. Shift will be done for half of raster size.
 
 %calculating number of grid cells 
@@ -23,8 +23,8 @@ lat=(lat1:nm2deg(raster):lat2)';
 lat(:,2)=(lat1+nm2deg(raster/2):nm2deg(raster):lat2+nm2deg(raster/2));
 grids.lat=lat;
 
-%output of grids.lat is two row set of latitude points for vertex of each
-%cell. First row is for defult grid, second row is for shift in latitude
+%output of grids.lat is two column set of latitude points for vertex of each
+%cell. First column is for defult grid, second column is for shift in latitude
 %axis
 
 nlat=size(grids.lat,1); %number of cells in N/S direction
