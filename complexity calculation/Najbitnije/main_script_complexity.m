@@ -6,7 +6,7 @@ clear
 % 2. Loads cloud data
 % 3. Creates PRU grid ...
 
-load TrafficArchive.mat
+load TrafficArchive.mat %pazi koji printaš
 load polygons3d.mat; %polygons3d.mat is a product of function nowcast_polygins_final2
 Clouddata = polygons3d;
 SimulationTime = 2.5 * 3600;
@@ -19,7 +19,7 @@ lon2 = 18;
 lat2 = 50; %S-N direction
 lat1 = 45;
 raster = 20;%dimension of one PRU cell, 20NM
-Traster = 20;
+Traster = 15;
 
 FL1 = 100; %lower and upper limit 
 FL2 = 450;
