@@ -9,7 +9,7 @@ clear
 load TrafficArchive.mat %pazi koji printaš
 load polygons3d.mat; %polygons3d.mat is a product of function nowcast_polygins_final2
 Clouddata = polygons3d;
-SimulationTime = 2.5 * 3600;
+SimulationTime =2 * 3600;
 desired_time=8*3600; %start of simulation
 endtime=desired_time+ SimulationTime; %end of simulation
 
@@ -19,7 +19,7 @@ lon2 = 18;
 lat2 = 50; %S-N direction
 lat1 = 45;
 raster = 20;%dimension of one PRU cell, 20NM
-Traster = 15;
+Traster = 20;
 
 FL1 = 100; %lower and upper limit 
 FL2 = 450;

@@ -52,7 +52,7 @@ flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
 
 TrafficArchive(length(flight_pos))=struct(); %variable that stores trajectories of all traffic
-for a=1%length(flight_pos)
+for a=1:length(flight_pos)
 %% generate each flight
 tic
 ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
