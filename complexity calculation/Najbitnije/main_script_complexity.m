@@ -34,6 +34,9 @@ EndTi=find(timescale==endtime);   %EndTi is index of ending time for timeframes 
 %creation of PRU grid with defined coordinates
 [grid, polygon, dims] = gridcreate (lon1,lat1,lon2,lat2,raster,FL1,FL2); %nisam sigurna da je ovo dobro, prebaciti kasnije u kod?
 
+%sampling 
+[TrafficScenario] = sampling (TrafficArchive);
+
 %inserting cloud data into grid
 [cloudGrid3D] = cloudGrid (Clouddata,polygon,dims,FL1,FL2,desired_time,endtime,raster);
 
