@@ -1,4 +1,5 @@
 clear
+genpath(addpath('C:\Users\ksamardzic\Documents\GitHub\Doktorski-repo'));
 %This is the main script for complexity calculation
 
 % Explanation of what this script does:
@@ -6,7 +7,7 @@ clear
 % 2. Loads cloud data
 % 3. Creates PRU grid ...
 
-load TrafficArchive.mat %pazi koji printaš
+%load TrafficArchive.mat %pazi koji printaš
 load polygons3d.mat; %polygons3d.mat is a product of function nowcast_polygins_final2
 Clouddata = polygons3d;
 SimulationTime =2 * 3600;
