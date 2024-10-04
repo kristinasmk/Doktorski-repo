@@ -53,7 +53,7 @@ for t=1:15 %for every traffic scenario
     
                 %select AC grid data according to created random indexes
                 if size(TP{a,p},1)==1
-                ACgd=TP{a,p}{ts,sf};
+            ACgd=TP{a,p}{ts,sf};
                 else
                     ACgd=TP{a,p}{ts,sf};
                 end
