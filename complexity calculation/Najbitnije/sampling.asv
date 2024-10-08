@@ -19,13 +19,7 @@ r = randperm(30);
 sample_i = r(1);
 sample_trajectory = weatherT_list{sample_i, 1};
 
-i = 1;
-while isnan(sample_trajectors) && i< numel(r)
-    i =i+1;
-    sample_i = r(i);
-    sample_trajectora = weatherTlist{sample_i,1};
-end
-
+i 
 TS{n, 1} = sample_trajectory;
 indices (n,1) = sample_i;
 end
