@@ -19,12 +19,13 @@ r = randperm(30);
 sample_i = r(1);
 sample_trajectory = weatherT_list{sample_i, 1};
 
-i = 1;
-while isnan(sample_trajectors) && i< numel(r)
-    i =i+1;
-    sample_i = r(i);
-    sample_trajectora = weatherTlist{sample_i,1};
-end
+%% Ovo æu otkomentirati kada provjerim što je s trajektorijama koje imaju NaN
+% i = 1;
+% while isnan(sample_trajectory) && i< numel(r)
+%     i =i+1;
+%     sample_i = r(i);
+%     sample_trajectory = weatherT_list{sample_i,1};
+% end
 
 TS{n, 1} = sample_trajectory;
 indices (n,1) = sample_i;
