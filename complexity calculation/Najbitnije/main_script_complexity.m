@@ -39,7 +39,7 @@ EndTi=find(timescale==endtime);   %EndTi is index of ending time for timeframes 
 TrafficScenarios_info = {}; %initialization of a variable that will store data about each traffic scenario
 while size (TrafficScenarios_info,1) <= 5000 %stavila sam 5000 ali mora biti neki drugi broj
     
-for i = 1:numel(No_weatherScenarios) %sampling po weather scenariu
+for i = 1:No_weatherScenarios %sampling po weather scenariu
     
 %sampling 
 [TS, indices, numAircraftTrajectories] = sampling (TrafficArchive, i);
