@@ -44,11 +44,11 @@ load ('allFPL.mat', 'allFPL');
 load ( 'FPLintent.mat', 'FPLintent');
 
 %function to extract flights within desired time and area
-[flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
+% [flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
 
-% load ('flight_hist.mat', 'flight_hist');
-% load ('flight_pos.mat', 'flight_pos');
-% load ('flight.mat', 'flight');
+load ('flight_hist.mat', 'flight_hist');
+load ('flight_pos.mat', 'flight_pos');
+load ('flight.mat', 'flight');
 
 %function to add EOBT time to flight_pos
 flight_pos = EOBTinput (FPLintent, flight_pos);
