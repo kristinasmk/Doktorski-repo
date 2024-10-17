@@ -10,11 +10,11 @@ load polygons3d.mat; %polygons3d.mat is a product of function nowcast_polygins_f
 load NeighboorsTable2 NeighboorsTable
 load ACsynonyms.mat
 load AirportList.mat
-% load ('allFPL.mat', 'allFPL');
-% load ( 'FPLintent.mat', 'FPLintent');
-% load ('flight_hist.mat', 'flight_hist');
-% load ('flight_pos.mat', 'flight_pos');
-% load ('flight.mat', 'flight');
+load ('allFPL.mat', 'allFPL');
+load ( 'FPLintent.mat', 'FPLintent');
+load ('flight_hist.mat', 'flight_hist');
+load ('flight_pos.mat', 'flight_pos');
+load ('flight.mat', 'flight');
 
 %Define constants
 constants                              %imports constants struct
@@ -45,7 +45,7 @@ raw_allft = '20210901Initial.ALL_FT+'; %FFP
 [allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
 
 %function to extract flights within desired time and area
-[flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
+% [flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
 
 %function to add EOBT time to flight_pos
 flight_pos = EOBTinput (FPLintent, flight_pos);

@@ -12,8 +12,8 @@ addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
 load polygons3d.mat; %polygons3d.mat is a product of function nowcast_polygins_final2
 load 'C:\Matlab\TrafficArchive.mat';
 Clouddata = polygons3d;
-SimulationTime =2 * 3600;
-desired_time=8*3600; %start of simulation
+SimulationTime =1.5 * 3600;
+desired_time=7.75*3600; %start of simulation
 endtime=desired_time+ SimulationTime; %end of simulation
 No_weatherScenarios = 15;
 
