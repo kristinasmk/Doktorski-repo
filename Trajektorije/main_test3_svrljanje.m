@@ -2,7 +2,7 @@
 clear
 addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
 
-load 'C:\Matlab\USE\nowcast_no_safety\nowcast_without_margin.mat'; %loads weather product
+load 'C:\Users\ksamardzic\Documents\GitHub\Doktorski-repo\nowcast_no_safety\nowcast_without_margin.mat'; %loads weather product
 %load 'D:\Novi kod\data\RDT\Clouddata0109.mat'; 
 addpath(genpath(pwd));                  %adds all paths for all subdirs
 constants                              %imports constants struct
@@ -55,7 +55,7 @@ flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
 
 TrafficArchive(length(flight_pos))=struct(); %variable that stores trajectories of all traffic
-for a=16%:length(flight_pos)
+for a=1:length(flight_pos)
 %% generate each flight
 tic
 ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
