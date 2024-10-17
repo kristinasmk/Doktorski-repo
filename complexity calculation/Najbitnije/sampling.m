@@ -20,10 +20,10 @@ if isempty(usedIndices)
         resetCount = zeros(numAircraft, numWeatherScenarios);
 end
  
-TS ={}
-indices = {}
+TS ={};
+indices = {};
 
-for n = 1:numAircraft
+for n = 1:2 %numAircraft
 weatherT = Trajectories(n).data(currentWeatherScenario,:,:);
 weatherT_list = reshape(weatherT, [30,1]);
 
@@ -37,8 +37,15 @@ end
 availableIndices = setdiff(1:30, usedIndices{n, currentWeatherScenario});
 
 r = randperm(numel(availableIndices));
-sample_i = availableIndices(r(1));
+
+for i = 1:numel(r)
+sample_i = availableIndices(r(i));
 sample_trajectory = weatherT_list{sample_i, 1};
+
+if ~isnan(sample_trajectory)
+    break;
+end
+end
 
 usedIndices{n, currentWeatherScenario} = [usedIndices{n, currentWeatherScenario}, sample_i];
 

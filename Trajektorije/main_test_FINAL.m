@@ -12,9 +12,9 @@ load ACsynonyms.mat
 load AirportList.mat
 % load ('allFPL.mat', 'allFPL');
 % load ( 'FPLintent.mat', 'FPLintent');
-load ('flight_hist.mat', 'flight_hist');
-load ('flight_pos.mat', 'flight_pos');
-load ('flight.mat', 'flight');
+% load ('flight_hist.mat', 'flight_hist');
+% load ('flight_pos.mat', 'flight_pos');
+% load ('flight.mat', 'flight');
 
 %Define constants
 constants                              %imports constants struct
@@ -28,9 +28,9 @@ Clouddata = polygons3d;
 NumofNowcastMembers = 15;
 NumOfSafetyMargins = 3;
 NumOfTOT = 10;
-SimulationTime = 2.5 * 3600;
-desired_time=8*3600; %start of simulation
-endtime=desired_time+ SimulationTime; %end of simulation
+SimulationTime = 1.5 * 3600; 
+desired_time=7.75*3600; %start of simulation 7:45
+endtime=desired_time+ SimulationTime; %end of simulation 9:15
 
 % [Clouddata, NumofNowcastMembers, NumOfSafetyMargins] = nowcast_polygons_final2 (nowcast,SM);
 
@@ -45,7 +45,7 @@ raw_allft = '20210901Initial.ALL_FT+'; %FFP
 [allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
 
 %function to extract flights within desired time and area
-%[flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
+[flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
 
 %function to add EOBT time to flight_pos
 flight_pos = EOBTinput (FPLintent, flight_pos);
