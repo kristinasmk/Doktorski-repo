@@ -4,7 +4,7 @@ addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
 addpath(genpath(pwd));                  %adds all paths for all subdirs
 
 %Load required data
-load 'C:\Matlab\USE\nowcast_no_safety\nowcast_without_margin.mat'; %loads weather product
+load 'C:\Users\ksamardzic\Documents\GitHub\Doktorski-repo\nowcast_no_safety\nowcast_without_margin.mat'; %loads weather product
 %load 'D:\Novi kod\data\RDT\Clouddata0109.mat'; 
 load polygons3d.mat; %polygons3d.mat is a product of function nowcast_polygins_final2
 load NeighboorsTable2 NeighboorsTable
@@ -42,8 +42,10 @@ FlownArea=[39 6 58 23];
 raw_so6= 'Traffic0109.so6'; %Traffic from Nest
 raw_allft = '20210901Initial.ALL_FT+'; %FFP
 
-[allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
+% [allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
 
+load ('allFPL.mat', 'allFPL');
+load ( 'FPLintent.mat', 'FPLintent');
 %function to extract flights within desired time and area
 % [flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
 

@@ -43,7 +43,7 @@ endtime=desired_time+2.5*3600; %end of simulation
 load ('allFPL.mat', 'allFPL');
 load ( 'FPLintent.mat', 'FPLintent');
 
-%function to extract flights within desired time and area
+%function to extr act flights within desired time and area
 % [flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
 
 load ('flight_hist.mat', 'flight_hist');
@@ -260,7 +260,6 @@ if intersected ==0 && time_to_EOBT < 0
 end
 
     toc
-save ('TrafficArchive.mat', 'TrafficArchive');
 %save ('leadTimeInSeconds', 'leadTimeInSeconds');
 
  %% Visualisation
@@ -284,5 +283,7 @@ save ('TrafficArchive.mat', 'TrafficArchive');
 %[f]=makemapbaseEur([40 50], [0 30]); %test - creates map base
 %marks = addflightstomap(f, flight_pos); %test - adds markers at A/C pos
 %delete(marks) %test - deletes markers (for animation purposes)
+  
     end
 end
+save ('TrafficArchive.mat', 'TrafficArchive'); 
