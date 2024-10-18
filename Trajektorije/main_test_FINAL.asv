@@ -54,9 +54,11 @@ flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
 
 TrafficArchive(length(flight_pos))=struct(); %variable that stores trajectories of all traffic
-for a=1:length(flight_pos)
+for a= 1:length(flight_pos)
+disp(['Processing flight: ', num2str(a)]);
+for nowcastMmber = 1:NumofNowcastMembers
+    
 %% generate each flight
-tic
 ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
 ACstateAll = cell (NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
 ACcontrolAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
@@ -88,6 +90,8 @@ end
     
 % Iterate over each nowcast member
     for nowcastMember = 1:NumofNowcastMembers
+        tic
+        disp(['Nowcasting member: ', num2str(nowcastMember)]);
         
         %provjera presijeca li planirana ruta bilo koji oblak
         [~, intersected, intersected_points] = crossing_check(Clouddata, AstarGrid, flight_pos(a).waypoints, nowcastMember);  
@@ -101,10 +105,12 @@ end
         
      % Iterate over each safety margin   
     for safetyMarginIndex = safetyMarginRange
+        disp(['Safety margin: ', num2str(safetyMarginIndex)]);
         
    CurrentCloudData = Clouddata(:, :, nowcastMember, safetyMarginIndex);
  %iterate over each TOT value
     for totIndex = TOTRange
+        disp(['TOT index: ', num2str(totIndex)]);
    % General simulation parameters:
     ACarchive=zeros(SimulationTime,20);
     FFP=flight_pos(a).waypoints;
