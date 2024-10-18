@@ -10,11 +10,11 @@ load polygons3d.mat; %polygons3d.mat is a product of function nowcast_polygins_f
 load NeighboorsTable2 NeighboorsTable
 load ACsynonyms.mat
 load AirportList.mat
-% load ('allFPL.mat', 'allFPL');
-% load ( 'FPLintent.mat', 'FPLintent');
-% load ('flight_hist.mat', 'flight_hist');
-% load ('flight_pos.mat', 'flight_pos');
-% load ('flight.mat', 'flight');
+load ('allFPL.mat', 'allFPL');
+load ( 'FPLintent.mat', 'FPLintent');
+load ('flight_hist.mat', 'flight_hist');
+load ('flight_pos.mat', 'flight_pos');
+load ('flight.mat', 'flight');
 
 %Define constants
 constants                              %imports constants struct
@@ -35,19 +35,19 @@ endtime=desired_time+ SimulationTime; %end of simulation 9:15
 % [Clouddata, NumofNowcastMembers, NumOfSafetyMargins] = nowcast_polygons_final2 (nowcast,SM);
 
 %dimensions of a FlownArea should match AstarGrid
-AstarGrid = struct('lon1', 8, 'lat1', 45, 'lon2', 19, 'lat2', 50);
-FlownArea=[45 8 50 19];
+AstarGrid = struct('lon1', 6, 'lat1', 39, 'lon2', 23, 'lat2', 58);
+FlownArea=[39 6 58 23];
 
 %Raw traffic Data files
 raw_so6= 'Traffic0109.so6'; %Traffic from Nest
 raw_allft = '20210901Initial.ALL_FT+'; %FFP
 
-[allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
+% [allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
 
 % load ('allFPL.mat', 'allFPL');
 % load ( 'FPLintent.mat', 'FPLintent');
 %function to extract flights within desired time and area
-[flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
+% [flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
 
 %function to add EOBT time to flight_pos
 flight_pos = EOBTinput (FPLintent, flight_pos);
