@@ -26,7 +26,7 @@ Wind=[0,0,0];
 SM = [10, 12.5, 15]; %add safety margins
 Clouddata = polygons3d;
 NumofNowcastMembers = 1;
-NumOfSafetyMargins = 1;
+NumOfSafetyMargins = 3;
 NumOfTOT = 10;
 SimulationTime = 1.5 * 3600; 
 desired_time=7.75*3600; %start of simulation 7:45
@@ -54,7 +54,7 @@ flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
 
 TrafficArchive(length(flight_pos))=struct(); %variable that stores trajectories of all traffic
-for a= 3%1:length(flight_pos)
+for a= 1:length(flight_pos)
 disp(['Processing flight: ', num2str(a)]);
 
 %% generate each flight
@@ -215,7 +215,11 @@ ACso6time=strcmp({flight.name},flight_pos(a).name);
     end
     ACso6time=et-flight_pos(a).spawntime;
 
-TimedifAll{nowcastMember,safetyMarginIndex,totIndex} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';       
+TimedifAll{nowcastMember,safetyMarginIndex,totIndex} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';  
+
+TrafficArchive(a).name = flight_pos(a).name;
+TrafficArchive(a).data{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll{nowcastMember,safetyMarginIndex,totIndex};
+TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{nowcastMember,safetyMarginIndex,totIndex};
     end
     end
 %if intersected is 0 and , copy the data to the other safety margins and adapt TOT time for other members
@@ -256,7 +260,6 @@ if intersected ==0 && time_to_EOBT < 0
          end
     end
 end
-
     toc
  %% Visualisation
 
@@ -270,9 +273,5 @@ end
 %     hold on
 %      end
 %  end
-    end
-    
-TrafficArchive(a).name = flight_pos(a).name;
-TrafficArchive(a).data{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll%{nowcastMember,safetyMarginIndex,totIndex};
-TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll%{nowcastMember,safetyMarginIndex,totIndex};      
+    end      
 end
