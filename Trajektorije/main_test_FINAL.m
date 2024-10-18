@@ -25,8 +25,8 @@ warning('off','MATLAB:polyshape:repairedBySimplify');
 Wind=[0,0,0];
 SM = [10, 12.5, 15]; %add safety margins
 Clouddata = polygons3d;
-NumofNowcastMembers = 15;
-NumOfSafetyMargins = 3;
+NumofNowcastMembers = 1;
+NumOfSafetyMargins = 1;
 NumOfTOT = 10;
 SimulationTime = 1.5 * 3600; 
 desired_time=7.75*3600; %start of simulation 7:45
@@ -53,8 +53,7 @@ raw_allft = '20210901Initial.ALL_FT+'; %FFP
 flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
 
-TrafficArchives = cell(NumofNowcastMembers, 1)
-% TrafficArchive(length(flight_pos))=struct(); %variable that stores trajectories of all traffic
+TrafficArchive(length(flight_pos))=struct(); %variable that stores trajectories of all traffic
 for a= 3%1:length(flight_pos)
 disp(['Processing flight: ', num2str(a)]);
 
@@ -216,11 +215,7 @@ ACso6time=strcmp({flight.name},flight_pos(a).name);
     end
     ACso6time=et-flight_pos(a).spawntime;
 
-TimedifAll{nowcastMember,safetyMarginIndex,totIndex} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
-
-TrafficArchive(a).name = flight_pos(a).name;
-TrafficArchive(a).data{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll{nowcastMember,safetyMarginIndex,totIndex};
-TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{nowcastMember,safetyMarginIndex,totIndex};         
+TimedifAll{nowcastMember,safetyMarginIndex,totIndex} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';       
     end
     end
 %if intersected is 0 and , copy the data to the other safety margins and adapt TOT time for other members
@@ -263,9 +258,6 @@ if intersected ==0 && time_to_EOBT < 0
 end
 
     toc
-save ('TrafficArchive.mat', 'TrafficArchive');
-%save ('leadTimeInSeconds', 'leadTimeInSeconds');
-
  %% Visualisation
 
  %figure;
@@ -279,4 +271,8 @@ save ('TrafficArchive.mat', 'TrafficArchive');
 %      end
 %  end
     end
+    
+TrafficArchive(a).name = flight_pos(a).name;
+TrafficArchive(a).data{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll%{nowcastMember,safetyMarginIndex,totIndex};
+TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll%{nowcastMember,safetyMarginIndex,totIndex};      
 end
