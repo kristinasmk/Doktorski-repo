@@ -25,7 +25,7 @@ warning('off','MATLAB:polyshape:repairedBySimplify');
 Wind=[0,0,0];
 SM = [10, 12.5, 15]; %add safety margins
 Clouddata = polygons3d;
-NumofNowcastMembers = 1;
+NumofNowcastMembers = 15;
 NumOfSafetyMargins = 3;
 NumOfTOT = 10;
 SimulationTime = 1.5 * 3600; 
@@ -88,7 +88,7 @@ if entrytime <= desired_time
 end
     
 % Iterate over each nowcast member
-    for nowcastMember = 1:NumofNowcastMembers
+    for nowcastMember = 1%:NumofNowcastMembers
         tic
         disp(['Nowcasting member: ', num2str(nowcastMember)]);
         
