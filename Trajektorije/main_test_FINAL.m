@@ -10,11 +10,11 @@ load polygons3d.mat; %polygons3d.mat is a product of function nowcast_polygins_f
 load NeighboorsTable2 NeighboorsTable
 load ACsynonyms.mat
 load AirportList.mat
-% load ('allFPL.mat', 'allFPL');
-% load ( 'FPLintent.mat', 'FPLintent');
-% load ('flight_hist.mat', 'flight_hist');
-% load ('flight_pos.mat', 'flight_pos');
-% load ('flight.mat', 'flight');
+load ('allFPL.mat', 'allFPL');
+load ( 'FPLintent.mat', 'FPLintent');
+load ('flight_hist.mat', 'flight_hist');
+load ('flight_pos.mat', 'flight_pos');
+load ('flight.mat', 'flight');
 
 %Define constants
 constants                              %imports constants struct
@@ -35,28 +35,29 @@ endtime=desired_time+ SimulationTime; %end of simulation 9:15
 % [Clouddata, NumofNowcastMembers, NumOfSafetyMargins] = nowcast_polygons_final2 (nowcast,SM);
 
 %dimensions of a FlownArea should match AstarGrid
-AstarGrid = struct('lon1', 8, 'lat1', 45, 'lon2', 19, 'lat2', 50);
-FlownArea=[45 8 50 19];
+AstarGrid = struct('lon1', 6, 'lat1', 39, 'lon2', 23, 'lat2', 58);
+FlownArea=[39 6 58 23];
 
 %Raw traffic Data files
 raw_so6= 'Traffic0109.so6'; %Traffic from Nest
 raw_allft = '20210901Initial.ALL_FT+'; %FFP
 
-[allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
+% [allFPL, FPLintent] = allftread2(raw_allft, desired_time, endtime); %this function creates FPLintent that is created by allftread from NEST
 
 % load ('allFPL.mat', 'allFPL');
 % load ( 'FPLintent.mat', 'FPLintent');
 %function to extract flights within desired time and area
-[flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
+% [flight_hist,flight_pos,flight] = so6reader_new (raw_so6,desired_time,endtime,FlownArea);
 
 %function to add EOBT time to flight_pos
 flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
 
 TrafficArchive(length(flight_pos))=struct(); %variable that stores trajectories of all traffic
-for a=1:length(flight_pos)
+for a= 1:length(flight_pos)
+disp(['Processing flight: ', num2str(a)]);
+
 %% generate each flight
-tic
 ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
 ACstateAll = cell (NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
 ACcontrolAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
@@ -87,7 +88,9 @@ if entrytime <= desired_time
 end
     
 % Iterate over each nowcast member
-    for nowcastMember = 1:NumofNowcastMembers
+    for nowcastMember = 1%:NumofNowcastMembers
+        tic
+        disp(['Nowcasting member: ', num2str(nowcastMember)]);
         
         %provjera presijeca li planirana ruta bilo koji oblak
         [~, intersected, intersected_points] = crossing_check(Clouddata, AstarGrid, flight_pos(a).waypoints, nowcastMember);  
@@ -101,10 +104,12 @@ end
         
      % Iterate over each safety margin   
     for safetyMarginIndex = safetyMarginRange
+        disp(['Safety margin: ', num2str(safetyMarginIndex)]);
         
    CurrentCloudData = Clouddata(:, :, nowcastMember, safetyMarginIndex);
  %iterate over each TOT value
     for totIndex = TOTRange
+        disp(['TOT index: ', num2str(totIndex)]);
    % General simulation parameters:
     ACarchive=zeros(SimulationTime,20);
     FFP=flight_pos(a).waypoints;
@@ -210,11 +215,11 @@ ACso6time=strcmp({flight.name},flight_pos(a).name);
     end
     ACso6time=et-flight_pos(a).spawntime;
 
-TimedifAll{nowcastMember,safetyMarginIndex,totIndex} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
+TimedifAll{nowcastMember,safetyMarginIndex,totIndex} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';  
 
 TrafficArchive(a).name = flight_pos(a).name;
 TrafficArchive(a).data{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll{nowcastMember,safetyMarginIndex,totIndex};
-TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{nowcastMember,safetyMarginIndex,totIndex};         
+TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{nowcastMember,safetyMarginIndex,totIndex};
     end
     end
 %if intersected is 0 and , copy the data to the other safety margins and adapt TOT time for other members
@@ -255,11 +260,7 @@ if intersected ==0 && time_to_EOBT < 0
          end
     end
 end
-
     toc
-save ('TrafficArchive.mat', 'TrafficArchive');
-%save ('leadTimeInSeconds', 'leadTimeInSeconds');
-
  %% Visualisation
 
  %figure;
@@ -272,5 +273,5 @@ save ('TrafficArchive.mat', 'TrafficArchive');
 %     hold on
 %      end
 %  end
-    end
+    end      
 end
