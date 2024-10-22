@@ -23,7 +23,7 @@ end
 TS ={};
 indices = {};
 
-for n = 1:2 %numAircraft
+for n = 1:4 %numAircraft
 weatherT = Trajectories(n).data(currentWeatherScenario,:,:);
 weatherT_list = reshape(weatherT, [30,1]);
 
@@ -42,8 +42,11 @@ for i = 1:numel(r)
 sample_i = availableIndices(r(i));
 sample_trajectory = weatherT_list{sample_i, 1};
 
-if ~isnan(sample_trajectory)
-    break;
+isNan = isnan(sample_trajectory(1,1));
+isEmpty = isempty(sample_trajectory);
+
+if ~isNan ||~isEmpty
+    break
 end
 end
 

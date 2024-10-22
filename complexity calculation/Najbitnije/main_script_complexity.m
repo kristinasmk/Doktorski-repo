@@ -1,4 +1,4 @@
-clear
+% clear
 addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
 %This is the main script for complexity calculation
 
@@ -10,7 +10,7 @@ addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
 
 %load TrafficArchive.mat %pazi koji printaš
 load polygons3d.mat; %polygons3d.mat is a product of function nowcast_polygins_final2
-load 'C:\Matlab\TrafficArchive.mat';
+% load 'C:\Matlab\TrafficArchive.mat';
 Clouddata = polygons3d;
 SimulationTime =1.5 * 3600;
 desired_time=7.75*3600; %start of simulation
