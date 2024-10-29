@@ -10,7 +10,7 @@ addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
 
 %load TrafficArchive.mat %pazi koji printaš
 load polygons3d.mat; %polygons3d.mat is a product of function nowcast_polygins_final2
-load 'C:\Matlab\TrafficArchive.mat';
+load 'C:\Users\ksamardzic\Desktop\TA1.mat';
 Clouddata = polygons3d;
 SimulationTime =1.5 * 3600;
 desired_time=7.75*3600; %start of simulation
@@ -40,7 +40,7 @@ TrafficScenarios_info = {}; %initialization of a variable that will store data a
 while size (TrafficScenarios_info,1) <= 5000 %stavila sam 5000 ali mora biti neki drugi broj
     
 for i = 1:No_weatherScenarios %sampling po weather scenariu
-    
+    %DODATI DIO KODA KOJI LOADA TA samo za taj WS
 %sampling 
 [TS, indices, numAircraftTrajectories] = sampling (TrafficArchive, i);
 

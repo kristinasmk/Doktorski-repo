@@ -1,5 +1,9 @@
+traffic_batch = 40;
+load ('flight_pos.mat', 'flight_pos');
+for batch = 1:traffic_batch:length(flight_pos)
+    batch_end = min(batch + traffic_batch - 1, length(flight_pos));
+    TrafficArchive(batch:batch_end) = struct();
 %To add path of the Github repository
-clear
 addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
 addpath(genpath(pwd));                  %adds all paths for all subdirs
 
@@ -13,7 +17,7 @@ load AirportList.mat;
 load ('allFPL.mat', 'allFPL');
 load ( 'FPLintent.mat', 'FPLintent');
 load ('flight_hist.mat', 'flight_hist');
-load ('flight_pos.mat', 'flight_pos');
+
 load ('flight.mat', 'flight');
 
 %Define constants
@@ -52,11 +56,6 @@ raw_allft = '20210901Initial.ALL_FT+'; %FFP
 %function to add EOBT time to flight_pos
 flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
-
-traffic_batch = 40;
-for batch = 1:traffic_batch:length(flight_pos)
-    batch_end = min(batch + traffic_batch - 1, length(flight_pos));
-    TrafficArchive(batch:batch_end) = struct();
     
 for a= batch:batch_end
 disp(['Processing flight: ', num2str(a)]);
@@ -269,9 +268,7 @@ end
 end
     save(['TA', num2str(batch)], 'TrafficArchive');
     
-    clearvars -except flight_pos allFPL FPLintent flight_hist flight ACsynonyms APlist polygons3d NeighboorsTable constants GlobalParameters ...
-              batch batch_end traffic_batch Wind SM Clouddata NumofNowcastMembers NumOfSafetyMargins NumOfTOT SimulationTime desired_time endtime ...
-              AstarGrid FlownArea raw_so6 raw_allft;
+    clearvars -except flight_pos traffic_batch batch;
  %% Visualisation
 
  %figure;

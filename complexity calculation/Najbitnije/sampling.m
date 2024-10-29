@@ -23,8 +23,10 @@ end
 TS ={};
 indices = {};
 
-for n = 1:2 %numAircraft
-weatherT = Trajectories(n).data(currentWeatherScenario,:,:);
+for n = 1:numAircraft
+% OVO JE AKO BUDEM UÈITAVALA TRAJEKTORIJE ZA VIŠE WEATHER SCENARIA 
+% weatherT = Trajectories(n).data(currentWeatherScenario,:,:);
+weatherT = Trajectories(n).data;
 weatherT_list = reshape(weatherT, [30,1]);
 
  % If all trajectories have been used, reset the list
