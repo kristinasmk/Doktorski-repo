@@ -1,5 +1,9 @@
+traffic_batch = 40;
+load ('flight_pos.mat', 'flight_pos');
+for batch = 1:traffic_batch:length(flight_pos)
+    batch_end = min(batch + traffic_batch - 1, length(flight_pos));
+    TrafficArchive(batch:batch_end) = struct();
 %To add path of the Github repository
-clear
 addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
 addpath(genpath(pwd));                  %adds all paths for all subdirs
 
@@ -7,13 +11,13 @@ addpath(genpath(pwd));                  %adds all paths for all subdirs
 load 'C:\Users\ksamardzic\Documents\GitHub\Doktorski-repo\nowcast_no_safety\nowcast_without_margin.mat'; %loads weather product
 %load 'D:\Novi kod\data\RDT\Clouddata0109.mat'; 
 load polygons3d.mat; %polygons3d.mat is a product of function nowcast_polygins_final2
-load NeighboorsTable2 NeighboorsTable
-load ACsynonyms.mat
-load AirportList.mat
+load NeighboorsTable2 NeighboorsTable;
+load ACsynonyms.mat;
+load AirportList.mat;
 load ('allFPL.mat', 'allFPL');
 load ( 'FPLintent.mat', 'FPLintent');
 load ('flight_hist.mat', 'flight_hist');
-load ('flight_pos.mat', 'flight_pos');
+
 load ('flight.mat', 'flight');
 
 %Define constants
@@ -52,21 +56,20 @@ raw_allft = '20210901Initial.ALL_FT+'; %FFP
 %function to add EOBT time to flight_pos
 flight_pos = EOBTinput (FPLintent, flight_pos);
 TOT_time_sec = zeros(1, 10);
-
-TrafficArchive(length(flight_pos))=struct(); %variable that stores trajectories of all traffic
-for a= 1:length(flight_pos)
+    
+for a= batch:batch_end
 disp(['Processing flight: ', num2str(a)]);
 
 %% generate each flight
-ACarchiveAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
-ACstateAll = cell (NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
-ACcontrolAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
-WPTiAll = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
-ACmodeAll = cell(NumofNowcastMembers,NumOfSafetyMargins, NumOfTOT);
-TimedifAll = cell(NumofNowcastMembers,NumOfSafetyMargins, NumOfTOT);
+ACarchiveAll = cell(NumOfSafetyMargins, NumOfTOT);
+ACstateAll = cell (NumOfSafetyMargins, NumOfTOT);
+ACcontrolAll = cell(NumOfSafetyMargins, NumOfTOT);
+WPTiAll = cell(NumOfSafetyMargins, NumOfTOT);
+ACmodeAll = cell(NumOfSafetyMargins, NumOfTOT);
+TimedifAll = cell(NumOfSafetyMargins, NumOfTOT);
 
-TrafficArchive(a).data = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
-TrafficArchive(a).tDif = cell(NumofNowcastMembers, NumOfSafetyMargins, NumOfTOT);
+TrafficArchive(a).data = cell(NumOfSafetyMargins, NumOfTOT);
+TrafficArchive(a).tDif = cell(NumOfSafetyMargins, NumOfTOT);
 
 %adaptation of spawn time to consider different EOBT
 entrytime = flight_pos(a).spawntime;
@@ -200,13 +203,13 @@ ACarchive=ACarchive(~(ACarchive(:,1)==0),:);
 % title([num2str(nowcastMember) ' ,' num2str(safetyMarginIndex)])
 % keyboard
 
-ACarchiveAll{nowcastMember, safetyMarginIndex,totIndex} = ACarchive;
-ACstateAll{nowcastMember,safetyMarginIndex,totIndex} = ACstate;
-ACcontrolAll{nowcastMember,safetyMarginIndex,totIndex} = ACcontrol;
-WPTiAll{nowcastMember,safetyMarginIndex,totIndex} = WPTi;
-ACmodeAll{nowcastMember,safetyMarginIndex,totIndex} = ACmode;
+ACarchiveAll{safetyMarginIndex,totIndex} = ACarchive;
+ACstateAll{safetyMarginIndex,totIndex} = ACstate;
+ACcontrolAll{safetyMarginIndex,totIndex} = ACcontrol;
+WPTiAll{safetyMarginIndex,totIndex} = WPTi;
+ACmodeAll{safetyMarginIndex,totIndex} = ACmode;
 
-ACsimtime=size(ACarchiveAll{nowcastMember}, safetyMarginIndex,totIndex);
+ACsimtime=size(ACarchiveAll{1}, safetyMarginIndex,totIndex);
 ACso6time=strcmp({flight.name},flight_pos(a).name);
     if flight(ACso6time).time(end,2)>endtime
         et=endtime;
@@ -215,11 +218,11 @@ ACso6time=strcmp({flight.name},flight_pos(a).name);
     end
     ACso6time=et-flight_pos(a).spawntime;
 
-TimedifAll{nowcastMember,safetyMarginIndex,totIndex} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';  
+TimedifAll{safetyMarginIndex,totIndex} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';  
 
 TrafficArchive(a).name = flight_pos(a).name;
-TrafficArchive(a).data{nowcastMember, safetyMarginIndex, totIndex} = ACarchiveAll{nowcastMember,safetyMarginIndex,totIndex};
-TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, totIndex} = TimedifAll{nowcastMember,safetyMarginIndex,totIndex};
+TrafficArchive(a).data{safetyMarginIndex, totIndex} = ACarchiveAll{safetyMarginIndex,totIndex};
+TrafficArchive(a).tDif{safetyMarginIndex, totIndex} = TimedifAll{safetyMarginIndex,totIndex};
     end
     end
 %if intersected is 0 and , copy the data to the other safety margins and adapt TOT time for other members
@@ -229,16 +232,16 @@ if intersected ==0 && time_to_EOBT > 0
           [ACarcho, TOT_increments] = TOT_decrement(ACarchive,time_to_EOBT/60, entrytime);
     for i = 1:NumOfTOT 
           ACwithTOT = ACarcho(:,:,i);
-          ACarchiveAll{nowcastMember, safetyMarginIndex,i} = ACwithTOT;
-          ACstateAll{nowcastMember,safetyMarginIndex,i} = ACstate;
-          ACcontrolAll{nowcastMember,safetyMarginIndex,i} = ACcontrol;
-          WPTiAll{nowcastMember,safetyMarginIndex,i} = WPTi;
-          ACmodeAll{nowcastMember,safetyMarginIndex,i} = ACmode;
+          ACarchiveAll{safetyMarginIndex,i} = ACwithTOT;
+          ACstateAll{safetyMarginIndex,i} = ACstate;
+          ACcontrolAll{safetyMarginIndex,i} = ACcontrol;
+          WPTiAll{safetyMarginIndex,i} = WPTi;
+          ACmodeAll{safetyMarginIndex,i} = ACmode;
           
-          TimedifAll{nowcastMember,safetyMarginIndex,i} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
+          TimedifAll{safetyMarginIndex,i} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
 %         TrafficArchive(a).name = flight_pos(a).name;
-          TrafficArchive(a).data{nowcastMember, safetyMarginIndex, i} = ACarchiveAll{nowcastMember,safetyMarginIndex,i};
-          TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, i} = TimedifAll{nowcastMember,safetyMarginIndex,i};
+          TrafficArchive(a).data{safetyMarginIndex, i} = ACarchiveAll{safetyMarginIndex,i};
+          TrafficArchive(a).tDif{safetyMarginIndex, i} = TimedifAll{safetyMarginIndex,i};
     end
     end
 end
@@ -247,20 +250,25 @@ if intersected ==0 && time_to_EOBT < 0
         [ACarcho] = TOT_decrementNaN(ACarchive, TOT_time_sec);
          for i = 1:NumOfTOT 
           ACwithTOT = ACarcho(:,:,i);
-          ACarchiveAll{nowcastMember, safetyMarginIndex,i} = ACwithTOT;
-          ACstateAll{nowcastMember,safetyMarginIndex,i} = ACstate;
-          ACcontrolAll{nowcastMember,safetyMarginIndex,i} = ACcontrol;
-          WPTiAll{nowcastMember,safetyMarginIndex,i} = WPTi;
-          ACmodeAll{nowcastMember,safetyMarginIndex,i} = ACmode;
+          ACarchiveAll{safetyMarginIndex,i} = ACwithTOT;
+          ACstateAll{safetyMarginIndex,i} = ACstate;
+          ACcontrolAll{safetyMarginIndex,i} = ACcontrol;
+          WPTiAll{safetyMarginIndex,i} = WPTi;
+          ACmodeAll{safetyMarginIndex,i} = ACmode;
           
-          TimedifAll{nowcastMember,safetyMarginIndex,i} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
+          TimedifAll{safetyMarginIndex,i} = [ACsimtime ACso6time ACsimtime/ACso6time ACsimtime-ACso6time ACsimtime/ACso6time-1]';
 %         TrafficArchive(a).name = flight_pos(a).name;
-          TrafficArchive(a).data{nowcastMember, safetyMarginIndex, i} = ACarchiveAll{nowcastMember,safetyMarginIndex,i};
-          TrafficArchive(a).tDif{nowcastMember, safetyMarginIndex, i} = TimedifAll{nowcastMember,safetyMarginIndex,i};
+          TrafficArchive(a).data{safetyMarginIndex, i} = ACarchiveAll{safetyMarginIndex,i};
+          TrafficArchive(a).tDif{safetyMarginIndex, i} = TimedifAll{safetyMarginIndex,i};
          end
     end
-end
     toc
+end
+    end
+end
+    save(['TA', num2str(batch)], 'TrafficArchive');
+    
+    clearvars -except flight_pos traffic_batch batch;
  %% Visualisation
 
  %figure;
@@ -272,6 +280,5 @@ end
 %      plot(data(:, 1), data(:, 2));
 %     hold on
 %      end
-%  end
-    end      
+%  end      
 end
