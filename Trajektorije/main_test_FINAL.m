@@ -1,6 +1,7 @@
 traffic_batch = 40;
+addpath(genpath('C:\Users\ksamardzic\Documents\GitHub\Doktorski-repo'));
 load ('flight_pos.mat', 'flight_pos');
-for batch = 1:traffic_batch:length(flight_pos)
+for batch = 241:traffic_batch:length(flight_pos)
     batch_end = min(batch + traffic_batch - 1, length(flight_pos));
     TrafficArchive(batch:batch_end) = struct();
 %To add path of the Github repository
@@ -91,7 +92,7 @@ if entrytime <= desired_time
 end
     
 % Iterate over each nowcast member
-    for nowcastMember = 1%:NumofNowcastMembers
+    for nowcastMember = 9%:NumofNowcastMembers
         tic
         disp(['Nowcasting member: ', num2str(nowcastMember)]);
         
@@ -269,6 +270,7 @@ end
     save(['TA', num2str(batch)], 'TrafficArchive');
     
     clearvars -except flight_pos traffic_batch batch;
+    fclose('all');
  %% Visualisation
 
  %figure;

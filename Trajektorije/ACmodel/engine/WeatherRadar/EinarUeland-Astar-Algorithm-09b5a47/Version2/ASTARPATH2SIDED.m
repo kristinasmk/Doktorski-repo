@@ -118,6 +118,15 @@ OpenMATEnd(GoalY,GoalX)=1;
 POINTLOG=[];
 C=0;
 D=0;
+
+%Provjerava rubne uvjete kada su nodovi isti
+if StartX == GoalX && StartY == GoalY
+    OptimalPath = [StartX, StartY];  % Path is just the start/goal node
+    OpenedMAT = zeros(Height, Width);  % No nodes opened
+    OpenedMAT(StartY, StartX) = 1;  % Mark the start node as opened
+    return;  % Exit the function
+end
+
 while 1==1 %Code will break when path found or when no path exist
     %%% REPEAT IT ALL, BUT FROM THE END
 [NZero]=nonzeros(FSparceEnd);
