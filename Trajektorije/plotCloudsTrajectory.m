@@ -23,7 +23,7 @@ for nowcastMember =1:size(nfz_cell,2)
     color = colormap(ax);
     color = color(nowcastMember, :);
     
-    trajectory = TrafficArchive(84).data{nowcastMember, safetyMargin};
+    trajectory = TrafficArchive(25).data{nowcastMember, safetyMargin};
     trajectoryColor = color;
     
     for leadTime = 1:numLeadTimes

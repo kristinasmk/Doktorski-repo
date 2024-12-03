@@ -33,7 +33,7 @@ end
      
       newPoint=[WP(1),WP(2)];
       
-    elseif isempty(cross)==0
+    elseif isempty(cross)==1
      [WP2(1),WP2(2)]=reckon(WPin(1),WPin(2),nm2deg(3),oposit);
      
          if inpolygons(WP2(1),WP2(2),cloud(:,1),cloud(:,2)) == 1
