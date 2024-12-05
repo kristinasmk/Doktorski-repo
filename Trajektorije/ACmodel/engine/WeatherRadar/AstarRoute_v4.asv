@@ -95,10 +95,8 @@ end
 GoalY=round((lat2-WP(1))/4*60);
 GoalX=round((WP(2)-lon1)/4*60);
 
+for 
 while StartY == GoalY && StartX == GoalX 
-%     if WPTffp > size(FFP,2)
-%         error('Nije dobro');
-%     end
     WPTffp=WPTffp+1;
     [NewWPT,WP] = pointshift (ACpos,WP,CloudsAll,Heading);
     GoalY=round((lat2-WP(1))/4*60);

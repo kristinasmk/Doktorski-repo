@@ -49,7 +49,7 @@ end
          end
     else
         WP=WPin;
-        newPoint=[];
+        newPoint=WP;
     end
    
     
