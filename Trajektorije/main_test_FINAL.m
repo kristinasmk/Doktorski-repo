@@ -1,7 +1,7 @@
 traffic_batch = 40;
 addpath(genpath('C:\Users\ksamardzic\Documents\GitHub\Doktorski-repo'));
 load ('flight_pos.mat', 'flight_pos');
-for batch = 25:traffic_batch:length(flight_pos)
+for batch = 401:traffic_batch:length(flight_pos)
     batch_end = min(batch + traffic_batch - 1, length(flight_pos));
     TrafficArchive(batch:batch_end) = struct();
 %To add path of the Github repository
@@ -40,7 +40,7 @@ endtime=desired_time+ SimulationTime; %end of simulation 9:15
 % [Clouddata, NumofNowcastMembers, NumOfSafetyMargins] = nowcast_polygons_final2 (nowcast,SM);
 
 %dimensions of a FlownArea should match AstarGrid
-AstarGrid = struct('lon1', 6, 'lat1', 39, 'lon2', 23, 'lat2', 58);
+AstarGrid = struct('lon1', 5, 'lat1', 38, 'lon2', 24, 'lat2', 59);
 FlownArea=[39 6 58 23];
 
 %Raw traffic Data files
@@ -92,7 +92,7 @@ if entrytime <= desired_time
 end
     
 % Iterate over each nowcast member
-    for nowcastMember = 8%:NumofNowcastMembers
+    for nowcastMember = 2%:NumofNowcastMembers
         tic
         disp(['Nowcasting member: ', num2str(nowcastMember)]);
         
@@ -107,7 +107,7 @@ end
         end
         
      % Iterate over each safety margin   
-    for safetyMarginIndex = 3 %safetyMarginRange
+    for safetyMarginIndex = safetyMarginRange
         disp(['Safety margin: ', num2str(safetyMarginIndex)]);
         
    CurrentCloudData = Clouddata(:, :, nowcastMember, safetyMarginIndex);
