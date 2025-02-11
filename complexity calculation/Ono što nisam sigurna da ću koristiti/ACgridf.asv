@@ -93,9 +93,9 @@ end
                                     %calculate rate of change flown in next 5 seconds or less
                                     %if ac was less than 5 seconds in cell
                                     if size(ACM,1)>5
-                                        rate=(ACM(5,1)-ACM(1,1))/5*60/0.3048;%bitno je samo kakav je stva zrakoplova u trenutku ulaska u æeliju
+                                        rate=(ACM(5,1)-ACM(1,1))/5*60/0.3048;
                                     else
-                                        rate=(ACM(size(ACM,1),1)-ACM(1,1))/size(ACM,1)*60/0.3048;
+                                        rate=(ACM(size(ACM,1),1)-ACM(1,1))/5*60/0.3048;
                                     end
                                     % vertical mode marking 0-climb 1-descent 2-cruise
                                     if rate>=500
@@ -117,7 +117,7 @@ end
                                     
                                     %logging AC-Cloud interaction
                                     if ~isempty(Clouds)
-                                        ACcell(6)={AC_cloudf([r(d),c(d),al],Clouds(:,:,:,p))}; %ova funkcija traži susjedne æelije i gleda ima li oblaka u trenutnoj ili susjednoj æeliji
+                                        ACcell(6)={AC_cloudf([r(d),c(d),al],Clouds(:,:,:,p))};
                                     else
                                         ACcell(6)={0};
                                     end

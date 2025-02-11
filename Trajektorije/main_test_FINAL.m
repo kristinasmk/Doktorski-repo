@@ -1,7 +1,7 @@
-traffic_batch = 40;
+traffic_batch = 1;
 addpath(genpath('C:\Users\ksamardzic\Documents\GitHub\Doktorski-repo'));
 load ('flight_pos.mat', 'flight_pos');
-for batch = 401:traffic_batch:length(flight_pos)
+for batch = 363:traffic_batch:length(flight_pos)
     batch_end = min(batch + traffic_batch - 1, length(flight_pos));
     TrafficArchive(batch:batch_end) = struct();
 %To add path of the Github repository
@@ -107,7 +107,7 @@ end
         end
         
      % Iterate over each safety margin   
-    for safetyMarginIndex = safetyMarginRange
+    for safetyMarginIndex = 3 %safetyMarginRange
         disp(['Safety margin: ', num2str(safetyMarginIndex)]);
         
    CurrentCloudData = Clouddata(:, :, nowcastMember, safetyMarginIndex);

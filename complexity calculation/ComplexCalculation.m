@@ -34,7 +34,7 @@ Mindi=cell(n,length(ticks));
 %for logging complexity values
 Cplx=cell(n,length(ticks));
 tic
-for t=1:15 %for every traffic scenario
+for t=1:15 %for every weather scenario
     tic
     for i=1:n
         %create empty PRUgrid 
@@ -90,7 +90,7 @@ for t=1:15 %for every traffic scenario
         y=1;
         for tim=tstart:window*60:tstart+duration*60
         
-        %cloud check function for adding cloud indicator to calculation
+        %wrapper primjenjuje calcindif na sve æelije
         wrapper = @(x) calcindif(x,tim,raster);
         %calculate indicators
         PRUindicators=cellfun( wrapper, PRUgrid , 'UniformOutput', false);

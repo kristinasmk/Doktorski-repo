@@ -47,9 +47,9 @@ for i = 1:No_weatherScenarios %sampling po weather scenariu
 [TS, indices, numAircraftTrajectories] = sampling (TrafficArchive, i);
 
 %inserting cloud data into grid
-[cloudGrid3D] = cloudGrid (Clouddata,polygon,dims,FL1,FL2,desired_time,endtime,raster); %izbaciti iz petjle, jednom samo izvrtiti pa kasnije loadati, stavlja oblake u grid
+[cloudGrid3D] = cloudGrid (Clouddata,polygon,dims,FL1,FL2,desired_time,endtime,raster); %izbaciti iz petjle, jednom samo izvrtiti pa kasnije loadati
 
-[ACAgrid4D] = ACgridf (TrafficArchive,polygon,dims,Traster,cloudGrid3D,StartTi,EndTi); %stavlja zrakoplove u grid
+[ACAgrid4D] = ACgridf (TrafficArchive,polygon,dims,Traster,cloudGrid3D,StartTi,EndTi);
 
 Trafficscenario_info = [Trafficscenario_info; {i, indices, numAircraftTrajectories, complexityMax, complexityMax_pos}];
 

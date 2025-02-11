@@ -381,10 +381,10 @@ while ACmode.StillFlying
     if (waypoints(WPTi).flyover == 1 && DistToNext < TurnRadius * 0.1)
         WPTi = WPTi + 1;
  
-    elseif (waypoints(WPTi).flyover == 0 && DistToNext < TurnRadius)
+    elseif (waypoints(WPTi).flyover == 0 && DistToNext < TurnRadius )
         WPTi = WPTi + 1;
   
-    elseif strcmp(waypoints(WPTi).name,'addedWPT') && DistToNext < TurnRadius*0.6
+    elseif strcmp(waypoints(WPTi).name,'addedWPT') && DistToNext < TurnRadius * 0.6
         WPTi = WPTi + 1;
         
     end

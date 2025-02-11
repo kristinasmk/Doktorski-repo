@@ -67,7 +67,7 @@ dt=[tstart,tstart+20*60]; %start and end time of cell timeframe
         TXS_AC=zeros(dims(1),1); %kreiranje prazne tablice interakcija za svaki AC
         for Spd=1:dims(1)                   %punjenje tablice
             SPDd=abs(FT_AC(:,3)-FT_AC(Spd,3));  %odredivanje koji su zrakoplovi u interakciji 
-            SPDd=SPDd*1.943844>35;              % na nacin da im je delta speed veci od 35 kt (multiplied by 1.9 to change from m/s to kt)
+            SPDd=SPDd*1.943844>35;                      % na nacin da im je delta speed veci od 35 kt (multiplied by 1.9 to change from m/s to kt)
             SPD_N=FT_AC(SPDd,1);                % izdvajanje navedenih redova
             TXS_AC(Spd)=FT_AC(Spd,1)*sum(SPD_N); %vrijeme interakcije za svaki ac
         end
