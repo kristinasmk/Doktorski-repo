@@ -1,4 +1,4 @@
-% clear
+clear all
 addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
 %This is the main script for complexity calculation
 
@@ -17,6 +17,7 @@ SimulationTime =1.5 * 3600;
 desired_time=7.75 *3600; %start of simulation
 endtime=desired_time+ SimulationTime; %end of simulation
 No_weatherScenarios = 15;
+NumOfSM =3;
 
 %definition of PRU grid limits
 lon1 = 8; %W-E direction
@@ -40,6 +41,14 @@ EndTi = EndTi(1);
 [grid, polygon, dims] = gridcreate (lon1,lat1,lon2,lat2,raster,FL1,FL2); %nisam sigurna da je ovo dobro, prebaciti kasnije u kod?
 
 TrafficScenarios_info = {}; %initialization of a variable that will store data about each traffic scenario
+cloudGrid3D = cell(1, No_weatherScenarios);
+
+%inserting cloud data into grid
+for i = 1:No_weatherScenarios
+    
+cloudGrid3D{i} = cloudGrid (Clouddata(:,:,i,:),polygon,dims,FL1,FL2,desired_time,endtime,raster, NumOfSM); %izbaciti iz petjle, jednom samo izvrtiti pa kasnije loadati, stavlja oblake u grid
+
+end
 while size (TrafficScenarios_info,1) <= 5000 %stavila sam 5000 ali mora biti neki drugi broj
     
 for i = 1:No_weatherScenarios %sampling po weather scenariu
@@ -47,8 +56,6 @@ for i = 1:No_weatherScenarios %sampling po weather scenariu
 %sampling 
 [TS, indices, numAircraftTrajectories] = sampling (TrafficArchive, i);
 
-%inserting cloud data into grid
-[cloudGrid3D] = cloudGrid (Clouddata,polygon,dims,FL1,FL2,desired_time,endtime,raster); %izbaciti iz petjle, jednom samo izvrtiti pa kasnije loadati, stavlja oblake u grid
 
 [ACAgrid4D] = ACgridf (TrafficArchive,polygon,dims,Traster,cloudGrid3D,StartTi,EndTi); %stavlja zrakoplove u grid
 

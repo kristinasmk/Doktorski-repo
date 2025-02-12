@@ -1,19 +1,20 @@
-function [cloudGrid3D] = cloudGrid (Clouddata,polygon,dims,FL1,FL2,startT,endT,raster)
+function [cloudGrid3D] = cloudGrid (Clouddata,polygon,dims,FL1,FL2,startT,endT,raster, NumOfSM)
 % this function reads all clouds and fill them in PRU grid as mask for
 % calculation AC-cloud interactions
 
 altrange=size(FL1:10:FL2,2);
-cloudGrid3D=Clouddata(:,2);
 
 %ovo se možda makne ispred same funkcije da ne ostanu prazna mjesta
 [~,kreni]=min(abs([Clouddata{:,2}]-startT));
 [~,stani]=min(abs([Clouddata{:,2}]-endT));
 
+cloudGrid3D =cell(stani,4);
+cloudGrid3D(:,1)=Clouddata(:,2);
 
 %this loop will open every cloud data image in 5 minute time interval
     for c=kreni:stani
-        
-        Clouds=Clouddata{c,3};
+        for sm = 1:NumOfSM
+        Clouds=Clouddata{c,3,1,sm};
         
         %this part will filter out all clouds with thickness of just 1 FL
         Alt=[Clouds{:,1}];
@@ -74,7 +75,8 @@ cloudGrid3D=Clouddata(:,2);
             end
         end
         CloudPRU=CloudPRU>0;  
-        cloudGrid3D(c,2)={CloudPRU};
+         cloudGrid3D{c, sm+1} = CloudPRU;
+        end
     end
 end
         
