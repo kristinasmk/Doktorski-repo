@@ -11,6 +11,7 @@ addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
 %load TrafficArchive.mat %pazi koji printaš
 load polygons3d.mat; %polygons3d.mat is a product of function nowcast_polygins_final2
 load ('C:\Users\ksamardzic\OneDrive - Fakultet prometnih znanosti\Dokumentacija s faksa\Doktorski rad\Matlab Data\nowcast1.mat');
+load cloudGrid3D.mat
 % load 'C:\Matlab\TrafficArchive.mat';
 Clouddata = polygons3d;
 SimulationTime =1.5 * 3600;
@@ -44,11 +45,11 @@ TrafficScenarios_info = {}; %initialization of a variable that will store data a
 cloudGrid3D = cell(1, No_weatherScenarios);
 
 %inserting cloud data into grid
-for i = 1:No_weatherScenarios
-    
-cloudGrid3D{i} = cloudGrid (Clouddata(:,:,i,:),polygon,dims,FL1,FL2,desired_time,endtime,raster, NumOfSM); %izbaciti iz petjle, jednom samo izvrtiti pa kasnije loadati, stavlja oblake u grid
-
-end
+% for i = 1:No_weatherScenarios
+%     
+% cloudGrid3D{i} = cloudGrid (Clouddata(:,:,i,:),polygon,dims,FL1,FL2,desired_time,endtime,raster, NumOfSM); %izbaciti iz petjle, jednom samo izvrtiti pa kasnije loadati, stavlja oblake u grid
+% 
+% end
 while size (TrafficScenarios_info,1) <= 5000 %stavila sam 5000 ali mora biti neki drugi broj
     
 for i = 1:No_weatherScenarios %sampling po weather scenariu
@@ -57,7 +58,7 @@ for i = 1:No_weatherScenarios %sampling po weather scenariu
 [TS, indices, numAircraftTrajectories] = sampling (TrafficArchive, i);
 
 
-[ACAgrid4D] = ACgridf (TrafficArchive,polygon,dims,Traster,cloudGrid3D,StartTi,EndTi); %stavlja zrakoplove u grid
+[ACAgrid4D] = ACgridf (TrafficArchive,polygon,dims,Traster,cloudGrid3D(1, i),StartTi,EndTi); %stavlja zrakoplove u grid
 
 Trafficscenario_info = [Trafficscenario_info; {i, indices, numAircraftTrajectories, complexityMax, complexityMax_pos}];
 
