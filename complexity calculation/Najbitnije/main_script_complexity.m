@@ -10,6 +10,7 @@ addpath(genpath('C:\Users\ksamardzic\Documents\Github\Doktorski-repo'));
 
 %load TrafficArchive.mat %pazi koji printaš
 load polygons3d.mat; %polygons3d.mat is a product of function nowcast_polygins_final2
+load ('C:\Users\ksamardzic\OneDrive - Fakultet prometnih znanosti\Dokumentacija s faksa\Doktorski rad\Matlab Data\nowcast1.mat');
 % load 'C:\Matlab\TrafficArchive.mat';
 Clouddata = polygons3d;
 SimulationTime =1.5 * 3600;
@@ -18,7 +19,7 @@ endtime=desired_time+ SimulationTime; %end of simulation
 No_weatherScenarios = 15;
 
 %definition of PRU grid limits
-lon1 = 9; %W-E direction
+lon1 = 8; %W-E direction
 lon2 = 18;
 lat2 = 50; %S-N direction
 lat1 = 45;

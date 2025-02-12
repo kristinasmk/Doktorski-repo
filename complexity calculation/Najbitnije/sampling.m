@@ -23,7 +23,7 @@ end
 TS ={};
 indices = {};
 
-for n = 1:4 %numAircraft
+for n = 1:numAircraft
 weatherT = Trajectories(n).data(currentWeatherScenario,:,:);
 weatherT_list = reshape(weatherT, [30,1]);
 
